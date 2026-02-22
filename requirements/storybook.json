@@ -1,0 +1,807 @@
+{
+  "product": {
+    "name": "Bloodline Storybook",
+    "tagline": "In 30 minutes, create a family legacy book.",
+    "mode": "one_time_purchase",
+    "primary_outcomes": [
+      "Royal-grade interactive tree (zoom/pan, wow-factor UI)",
+      "AI-generated biographies + family chapters (user-approved, no hallucinations)",
+      "Export: premium PDF storybook + printable poster",
+      "Private sharing (unlisted link + optional password/expiry)"
+    ],
+    "mvp_screens": [
+      "ImportOnboarding",
+      "TreeViewer",
+      "PersonProfile",
+      "StoryGenerator",
+      "Export",
+      "PrivateShare"
+    ]
+  },
+
+  "ux_ui": {
+    "design_goals": [
+      "Stunning, modern, premium 'royal archive' aesthetic",
+      "Smooth camera feel (pan/zoom inertia, fly-to focus)",
+      "Strong hierarchy readability by generation",
+      "Delightful micro-interactions (hover glow, selection spotlight, subtle parallax)",
+      "Fast and stable on mid-range laptops"
+    ],
+    "visual_language": {
+      "theme": "Royal Modern",
+      "materials": ["velvet", "brushed_gold", "obsidian_glass"],
+      "lighting": {
+        "vignette": true,
+        "spotlight_on_selected": true,
+        "ambient_particles": "subtle_dust_grain_5pct"
+      },
+      "typography": {
+        "display_font": "Elegant Serif (fallback: Georgia)",
+        "ui_font": "Modern Sans (fallback: Inter)",
+        "scale": {
+          "node_title": "14-16px",
+          "node_subtitle": "11-12px",
+          "panel_heading": "18-22px",
+          "panel_body": "12-14px"
+        }
+      },
+      "color_tokens": {
+        "bg_base": "#07080b",
+        "bg_velvet_top": "#101217",
+        "gold_light": "#fff2b2",
+        "gold_mid": "#d6b55c",
+        "gold_dark": "#7a5a16",
+        "text_primary": "#efe2b6",
+        "text_muted": "rgba(214,181,92,0.78)",
+        "line_primary": "rgba(214,181,92,0.65)",
+        "line_partner": "rgba(214,181,92,0.35)",
+        "danger": "#ff5a5f",
+        "success": "#4cd964"
+      },
+      "motion": {
+        "easing_default": "cubic-bezier(0.2, 0.8, 0.2, 1)",
+        "duration_fast_ms": 140,
+        "duration_med_ms": 280,
+        "duration_slow_ms": 650,
+        "reduced_motion_support": true
+      }
+    },
+    "interaction_patterns": {
+      "tree_camera": {
+        "zoom_pan": true,
+        "scale_extent": [0.2, 2.8],
+        "double_click_focus": true,
+        "fit_to_screen": true,
+        "fly_to_selected": true,
+        "minimap": "mvp_optional",
+        "touch_support": true
+      },
+      "focus_modes": {
+        "spotlight_selected": true,
+        "dim_non_related": true,
+        "highlight_lineage_ancestors_descendants": true,
+        "toggle_partner_links": true,
+        "toggle_non_core_relations": "v1_optional"
+      },
+      "node_states": {
+        "default": ["soft_shadow", "gold_rim", "velvet_plaque"],
+        "hover": ["raise_2px", "rim_brighten", "subtle_glow"],
+        "selected": ["gold_glow", "spotlight", "link_emphasis"],
+        "search_match": ["pulse_once", "outline_gold"]
+      }
+    },
+    "performance_budgets": {
+      "initial_render_250_nodes_ms": 900,
+      "interaction_fps_target": 55,
+      "max_nodes_mvp": 500,
+      "max_links_mvp": 900,
+      "virtualize_panels": true,
+      "debounce_layout_recompute_ms": 120
+    },
+    "accessibility": {
+      "keyboard_navigation": true,
+      "focus_visible": true,
+      "aria_labels": true,
+      "contrast_minimum": "WCAG_AA_target",
+      "reduced_motion": true
+    }
+  },
+
+  "architecture": {
+    "frontend": {
+      "framework": "Next.js (App Router)",
+      "rendering": "client-heavy for TreeViewer; SSR for marketing pages",
+      "state": "TanStack Query (async) + Zustand (ui state) or Redux Toolkit",
+      "tree_engine": {
+        "library": "D3",
+        "layout_strategy": {
+          "primary": "hierarchical (d3.hierarchy + d3.tree)",
+          "partners": "satellite nodes attached to person",
+          "unions": "implicit union under couple (optional)"
+        },
+        "edges": {
+          "parent_child": "curved cubic bezier, thicker",
+          "partner": "dashed, thinner",
+          "noise_reduction": "fade by depth; show only core links by default"
+        }
+      },
+      "styling": "MUI v5 or Tailwind (choose one and keep consistent)",
+      "animation": "Framer Motion (panels) + D3 transitions (camera)"
+    },
+    "backend": {
+      "mvp": "none required for read-only demo; optional API routes for export + share tokens",
+      "storage": {
+        "mvp": "local JSON + browser storage",
+        "production": "object storage for images + db for projects (Vault later)"
+      }
+    },
+    "export": {
+      "pdf_engine": "server-side (recommended) OR client-side fallback",
+      "poster": "SVG -> high-res PNG/PDF pipeline"
+    }
+  },
+
+  "epics": [
+    {
+      "id": "E1",
+      "name": "Project & Dataset Setup",
+      "goal": "User can create a Storybook project and load data fast (manual or CSV).",
+      "user_stories": [
+        {
+          "id": "US1.1",
+          "title": "Create a new Storybook project with royal theme",
+          "roles": ["User"],
+          "scenario": "User enters project name, house name, crest/motto, and chooses privacy defaults.",
+          "acceptance_tests": [
+            {
+              "id": "AT1.1.1",
+              "given": "I am on the onboarding page",
+              "when": "I enter project metadata and click Create",
+              "then": "A new project is created with default theme tokens and empty dataset",
+              "and": "I am navigated to Import step"
+            },
+            {
+              "id": "AT1.1.2",
+              "given": "I have reduced motion enabled",
+              "when": "I proceed through onboarding",
+              "then": "Animations are minimized while maintaining usability"
+            }
+          ]
+        },
+        {
+          "id": "US1.2",
+          "title": "Import dataset from CSV using template",
+          "roles": ["User"],
+          "scenario": "User downloads CSV template, fills it, uploads it, and fixes validation issues.",
+          "acceptance_tests": [
+            {
+              "id": "AT1.2.1",
+              "given": "I uploaded a CSV with missing parent references",
+              "when": "Import validation runs",
+              "then": "I see a clear error list with row numbers and suggested fixes",
+              "and": "I can continue with orphans unlinked"
+            },
+            {
+              "id": "AT1.2.2",
+              "given": "I uploaded a CSV that creates a cycle",
+              "when": "Import validation runs",
+              "then": "Import blocks with 'cycle detected' error and highlights involved IDs"
+            }
+          ]
+        },
+        {
+          "id": "US1.3",
+          "title": "Invite relatives to submit info via shareable form link",
+          "roles": ["User", "Relative"],
+          "scenario": "User creates a contribution link; relatives fill a guided form; data lands in the dataset.",
+          "acceptance_tests": [
+            {
+              "id": "AT1.3.1",
+              "given": "I generate an invite link",
+              "when": "A relative opens it",
+              "then": "They can submit person details and photos without seeing full tree"
+            },
+            {
+              "id": "AT1.3.2",
+              "given": "A relative submits info",
+              "when": "Submission completes",
+              "then": "The project owner sees the submission and can approve/merge it into the dataset"
+            }
+          ],
+          "note": "If you want pure 'one-time' with no backend, treat invite form as 'share JSON draft file' in MVP; approval queue becomes Vault-grade later."
+        }
+      ]
+    },
+
+    {
+      "id": "E2",
+      "name": "Royal Tree Viewer (Wow UI)",
+      "goal": "A stunning tree with premium interactions (zoom/pan, spotlight, search, filters).",
+      "user_stories": [
+        {
+          "id": "US2.1",
+          "title": "View the family tree with smooth zoom/pan and hierarchy readability",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT2.1.1",
+              "given": "A dataset with 200 people",
+              "when": "Tree loads",
+              "then": "Tree renders under the performance budget and remains interactive"
+            },
+            {
+              "id": "AT2.1.2",
+              "given": "I scroll zoom and drag pan",
+              "when": "I interact with the canvas",
+              "then": "Camera movement feels smooth and bounded by scale extent"
+            }
+          ]
+        },
+        {
+          "id": "US2.2",
+          "title": "Select a person and spotlight their lineage",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT2.2.1",
+              "given": "I click a node",
+              "when": "Selection occurs",
+              "then": "Selected node glows with gold halo, panel opens, and related nodes/edges are emphasized",
+              "and": "Non-related nodes fade to a dim opacity"
+            },
+            {
+              "id": "AT2.2.2",
+              "given": "I double-click a node",
+              "when": "Focus is triggered",
+              "then": "Camera fly-to centers the node with smooth transition"
+            }
+          ]
+        },
+        {
+          "id": "US2.3",
+          "title": "Search and filter nodes by name, branch, tags, status",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT2.3.1",
+              "given": "I type a name in search",
+              "when": "Results appear",
+              "then": "Matching nodes are highlighted and I can jump to the top match"
+            },
+            {
+              "id": "AT2.3.2",
+              "given": "I apply 'Living' status filter",
+              "when": "Filter is active",
+              "then": "Only living nodes remain visible and layout stays stable (no jitter)"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "E3",
+      "name": "Person Profile & Editing",
+      "goal": "Rich person details that directly feed bios and chapters.",
+      "user_stories": [
+        {
+          "id": "US3.1",
+          "title": "View person profile with relationships, events and media",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT3.1.1",
+              "given": "I select a node",
+              "when": "Profile panel opens",
+              "then": "I see portrait, titles, house/branch, key dates/places, parents/partners/children and notable events"
+            }
+          ]
+        },
+        {
+          "id": "US3.2",
+          "title": "Edit person details and immediately reflect in tree and story inputs",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT3.2.1",
+              "given": "I edit a person’s name/title",
+              "when": "I save",
+              "then": "Tree node label updates and story generator uses the updated facts"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "E4",
+      "name": "AI Story Generator (No Hallucinations)",
+      "goal": "Generate biographies and family chapters using only provided facts, with editing + versioning.",
+      "user_stories": [
+        {
+          "id": "US4.1",
+          "title": "Generate a biography for a person with tone/length controls",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT4.1.1",
+              "given": "A person has incomplete facts",
+              "when": "I generate a bio",
+              "then": "Output gracefully says unknown where appropriate and does not invent facts",
+              "and": "A 'Facts used' list is shown"
+            }
+          ]
+        },
+        {
+          "id": "US4.2",
+          "title": "Generate family chapters based on branches, eras, and themes",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT4.2.1",
+              "given": "I choose chapters template 'Origins → Migration → Today'",
+              "when": "I generate chapters",
+              "then": "Chapters reference only facts/events in dataset and include an index of referenced people/events"
+            }
+          ]
+        },
+        {
+          "id": "US4.3",
+          "title": "Edit drafts, regenerate sections, and keep versions",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT4.3.1",
+              "given": "I have a generated chapter",
+              "when": "I regenerate only paragraph 2 with a new instruction",
+              "then": "Only that section changes, and version history stores before/after"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "E5",
+      "name": "Export (PDF Storybook + Poster)",
+      "goal": "Print-ready premium outputs that look expensive.",
+      "user_stories": [
+        {
+          "id": "US5.1",
+          "title": "Export PDF storybook (A4/Letter) with cover, TOC, chapters, bios, timeline, index",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT5.1.1",
+              "given": "I click Export PDF",
+              "when": "Export completes",
+              "then": "PDF includes cover, table of contents, page numbers, consistent styling, and no clipped text"
+            },
+            {
+              "id": "AT5.1.2",
+              "given": "Living people privacy is set to 'anonymize'",
+              "when": "I export",
+              "then": "Living people appear without sensitive fields per rules"
+            }
+          ]
+        },
+        {
+          "id": "US5.2",
+          "title": "Export printable poster (A2/A1) with crisp nodes/lines and QR to private link",
+          "roles": ["User"],
+          "acceptance_tests": [
+            {
+              "id": "AT5.2.1",
+              "given": "I export poster A1",
+              "when": "Download completes",
+              "then": "Poster is high-resolution, readable, and includes house title + optional motto + QR code"
+            }
+          ]
+        }
+      ]
+    },
+
+    {
+      "id": "E6",
+      "name": "Private Sharing",
+      "goal": "Share privately without indexing; safe defaults.",
+      "user_stories": [
+        {
+          "id": "US6.1",
+          "title": "Generate unlisted share link with optional password and expiry",
+          "roles": ["User", "Viewer"],
+          "acceptance_tests": [
+            {
+              "id": "AT6.1.1",
+              "given": "I create a share link",
+              "when": "Viewer opens it",
+              "then": "They can view storybook pages without edit permissions",
+              "and": "Link is not discoverable by search engines"
+            }
+          ]
+        }
+      ]
+    }
+  ],
+
+  "privacy_rules": {
+    "defaults": {
+      "hide_exact_birthdates_for_living_in_shared_views": true,
+      "hide_contact_fields_in_pdf": true,
+      "hide_children_photos_in_shared_views": "default_true",
+      "anonymize_living_toggle_available": true
+    },
+    "fields_considered_sensitive": [
+      "phone",
+      "email",
+      "exact_birth_date",
+      "address",
+      "private_notes"
+    ],
+    "sharing": {
+      "unlisted_links": true,
+      "password_optional": true,
+      "expiry_optional": true,
+      "robots_noindex": true
+    }
+  },
+
+  "data_schema": {
+    "version": "1.0.0",
+    "types": {
+      "Project": {
+        "id": "string",
+        "name": "string",
+        "house": {
+          "name": "string",
+          "motto": "string",
+          "crest": { "type": "image_ref", "optional": true },
+          "branch_labels": ["string"]
+        },
+        "theme": {
+          "preset": "RoyalModern",
+          "overrides": { "type": "object", "optional": true }
+        },
+        "privacy": { "ref": "PrivacyConfig" },
+        "createdAt": "iso_datetime",
+        "updatedAt": "iso_datetime"
+      },
+      "Person": {
+        "id": "string",
+        "displayName": "string",
+        "fullName": "string",
+        "gender": { "type": "string", "optional": true },
+        "status": { "enum": ["Living", "Deceased", "Unknown"] },
+        "titles": ["string"],
+        "house": { "type": "string", "optional": true },
+        "branch": { "type": "string", "optional": true },
+        "birth": {
+          "date": { "type": "date_or_partial", "optional": true },
+          "placeId": { "type": "string", "optional": true }
+        },
+        "death": {
+          "date": { "type": "date_or_partial", "optional": true },
+          "placeId": { "type": "string", "optional": true }
+        },
+        "aliases": ["string"],
+        "occupation": { "type": "string", "optional": true },
+        "education": [{ "ref": "EducationItem" }],
+        "achievements": ["string"],
+        "languages": ["string"],
+        "tags": ["string"],
+        "bio": {
+          "drafts": [{ "ref": "TextDraft" }]
+        },
+        "media": {
+          "portrait": { "ref": "MediaRef", "optional": true },
+          "gallery": [{ "ref": "MediaRef" }]
+        },
+        "notes": {
+          "public": { "type": "string", "optional": true },
+          "private": { "type": "string", "optional": true }
+        }
+      },
+      "Relationship": {
+        "id": "string",
+        "type": { "enum": ["ParentChild", "Partner"] },
+        "fromPersonId": "string",
+        "toPersonId": "string",
+        "metadata": {
+          "startDate": { "type": "date_or_partial", "optional": true },
+          "endDate": { "type": "date_or_partial", "optional": true },
+          "relationshipSubtype": {
+            "type": "string",
+            "optional": true,
+            "examples": ["adopted", "step", "foster", "engaged", "married", "separated"]
+          },
+          "notes": { "type": "string", "optional": true }
+        }
+      },
+      "Event": {
+        "id": "string",
+        "type": {
+          "enum": [
+            "Birth",
+            "Marriage",
+            "Death",
+            "Migration",
+            "Education",
+            "Career",
+            "Award",
+            "Tradition",
+            "Reunion",
+            "Other"
+          ]
+        },
+        "date": { "type": "date_or_partial", "optional": true },
+        "placeId": { "type": "string", "optional": true },
+        "title": "string",
+        "description": { "type": "string", "optional": true },
+        "personIds": ["string"],
+        "branch": { "type": "string", "optional": true },
+        "tags": ["string"],
+        "media": [{ "ref": "MediaRef" }]
+      },
+      "Place": {
+        "id": "string",
+        "label": "string",
+        "country": { "type": "string", "optional": true },
+        "region": { "type": "string", "optional": true },
+        "city": { "type": "string", "optional": true },
+        "geo": { "type": "object", "optional": true, "shape": { "lat": "number", "lng": "number" } }
+      },
+      "MediaRef": {
+        "id": "string",
+        "kind": { "enum": ["image", "document", "audio", "video"] },
+        "url": "string",
+        "caption": { "type": "string", "optional": true },
+        "credits": { "type": "string", "optional": true },
+        "createdAt": "iso_datetime"
+      },
+      "TextDraft": {
+        "id": "string",
+        "kind": { "enum": ["bio", "chapter", "caption"] },
+        "title": { "type": "string", "optional": true },
+        "content": "string",
+        "createdAt": "iso_datetime",
+        "updatedAt": "iso_datetime",
+        "ai": {
+          "model": { "type": "string", "optional": true },
+          "promptId": { "type": "string", "optional": true },
+          "factsUsed": [{ "ref": "FactRef" }],
+          "safety": {
+            "noHallucinations": true,
+            "unknownHandling": "explicit_unknowns"
+          }
+        },
+        "version": "number"
+      },
+      "FactRef": {
+        "entityType": { "enum": ["Person", "Event", "Place", "Relationship"] },
+        "entityId": "string",
+        "fieldPath": "string"
+      },
+      "EducationItem": {
+        "institution": "string",
+        "degree": { "type": "string", "optional": true },
+        "year": { "type": "string", "optional": true }
+      },
+      "PrivacyConfig": {
+        "anonymizeLivingInExports": "boolean",
+        "hideExactBirthDatesLivingInSharedViews": "boolean",
+        "hideContactFieldsInPDF": "boolean",
+        "hideChildrenPhotosInSharedViews": "boolean"
+      }
+    },
+    "dataset": {
+      "project": { "ref": "Project" },
+      "people": [{ "ref": "Person" }],
+      "relationships": [{ "ref": "Relationship" }],
+      "events": [{ "ref": "Event" }],
+      "places": [{ "ref": "Place" }],
+      "exports": {
+        "pdfs": [{ "ref": "ExportArtifact" }],
+        "posters": [{ "ref": "ExportArtifact" }]
+      }
+    },
+    "additional_types": {
+      "ExportArtifact": {
+        "id": "string",
+        "type": { "enum": ["PDF_BOOK", "POSTER_A2", "POSTER_A1"] },
+        "status": { "enum": ["queued", "rendering", "done", "failed"] },
+        "fileUrl": { "type": "string", "optional": true },
+        "createdAt": "iso_datetime",
+        "options": { "type": "object" }
+      }
+    }
+  },
+
+  "ai_prompts": {
+    "principles": [
+      "Use only facts present in dataset (people, relationships, events, places).",
+      "Never invent dates/places/relationships.",
+      "If data missing, write 'unknown' gracefully and suggest what to add.",
+      "Return 'factsUsed' references to enable traceability."
+    ],
+    "prompt_templates": [
+      {
+        "id": "P_BIO_001",
+        "name": "Generate Biography",
+        "inputs": {
+          "personId": "string",
+          "tone": { "enum": ["Formal", "Warm", "Celebratory", "Minimal"] },
+          "length": { "enum": ["Short", "Medium", "Long"] },
+          "excludeTopics": ["string"]
+        },
+        "system": "You are a careful biographer. Use ONLY provided facts. Do not infer or invent.",
+        "user": [
+          "Write a {length} biography in a {tone} tone for this person.",
+          "Only use the facts below. If something is missing, say it is unknown.",
+          "Exclude these topics if referenced: {excludeTopics}.",
+          "Facts (JSON): {personFactsJson}",
+          "Related facts: relationships, events, places (JSON): {contextFactsJson}",
+          "Return JSON with fields: content, factsUsed[], missingInfoChecklist[]."
+        ],
+        "expected_output_schema": {
+          "content": "string",
+          "factsUsed": [{ "ref": "FactRef" }],
+          "missingInfoChecklist": ["string"]
+        }
+      },
+      {
+        "id": "P_CHAPTER_001",
+        "name": "Generate Family Chapter",
+        "inputs": {
+          "chapterTheme": "string",
+          "includedPersonIds": ["string"],
+          "tone": { "enum": ["Formal", "Warm", "Inspirational"] },
+          "length": { "enum": ["Short", "Medium", "Long"] },
+          "excludeTopics": ["string"]
+        },
+        "system": "You are a historian writing a family chapter. Use ONLY dataset facts. No hallucinations.",
+        "user": [
+          "Write a chapter titled '{chapterTheme}' in a {tone} tone, length {length}.",
+          "Only use these facts (JSON): {factsJson}.",
+          "If there are gaps, explicitly mark them as unknown and propose what to add.",
+          "Return JSON with: title, content, factsUsed[], timelineBullets[], missingInfoChecklist[]."
+        ],
+        "expected_output_schema": {
+          "title": "string",
+          "content": "string",
+          "timelineBullets": ["string"],
+          "factsUsed": [{ "ref": "FactRef" }],
+          "missingInfoChecklist": ["string"]
+        }
+      }
+    ]
+  },
+
+  "export_templates": {
+    "pdf_storybook": {
+      "formats": ["A4", "Letter"],
+      "sections": [
+        {
+          "id": "S1",
+          "name": "Cover",
+          "content": ["House name", "Crest", "Motto", "Edition date"],
+          "style": "RoyalModern"
+        },
+        {
+          "id": "S2",
+          "name": "Family Overview",
+          "content": ["Short family summary", "Key stats (people count, generations, branches)"],
+          "ai_optional": true
+        },
+        {
+          "id": "S3",
+          "name": "Tree Spreads",
+          "content": [
+            "Readable snapshots per generation",
+            "Legend for parent/partner lines",
+            "Optional QR to private web view"
+          ]
+        },
+        {
+          "id": "S4",
+          "name": "Chapters",
+          "content": ["AI-generated chapters (user-edited)"]
+        },
+        {
+          "id": "S5",
+          "name": "Biographies",
+          "content": ["Bios (selected or all)", "Facts used badge (optional)"]
+        },
+        {
+          "id": "S6",
+          "name": "Timeline",
+          "content": ["Chronological events grouped by era/branch"]
+        },
+        {
+          "id": "S7",
+          "name": "Gallery Highlights",
+          "content": ["Best photos with captions"]
+        },
+        {
+          "id": "S8",
+          "name": "Index",
+          "content": ["Alphabetical people index", "Branch index"]
+        }
+      ],
+      "render_quality": {
+        "typography": "no_orphans_widows",
+        "image_handling": "cover_crop_with_safe_area",
+        "page_numbers": true,
+        "toc": true
+      },
+      "privacy_application": "apply PrivacyConfig rules to all exported sections"
+    },
+    "poster": {
+      "sizes": ["A2", "A1"],
+      "layout": "hierarchical",
+      "elements": ["House title", "Crest/motto optional", "Legend", "QR optional"],
+      "print_quality": {
+        "vector_first": true,
+        "min_font_size_pt": 9,
+        "stroke_scaling": "consistent"
+      }
+    }
+  },
+
+  "test_plan": {
+    "unit_tests": [
+      "Graph validation: cycles detection",
+      "Relationship derivation: siblings from parents",
+      "Privacy filter: anonymize living fields",
+      "AI factsUsed tracing: every paragraph references known facts set"
+    ],
+    "integration_tests": [
+      "CSV import -> tree render -> select node -> generate bio -> export PDF",
+      "Search -> focus node -> lineage highlight -> export poster",
+      "Private share link -> viewer can access -> no edit actions visible"
+    ],
+    "e2e_tests": [
+      "MVP happy path completes under 30 minutes with sample dataset",
+      "Performance: 250 nodes load and interact within budget",
+      "Reduced motion: animations reduced but flow remains smooth"
+    ],
+    "visual_regression": [
+      "Tree node card renders consistently across browsers",
+      "PDF typography + spacing consistency",
+      "Poster readability snapshots"
+    ]
+  },
+
+  "mvp_scope_controls": {
+    "in_scope": [
+      "Manual + CSV import",
+      "Royal Tree Viewer (hierarchical + partners)",
+      "Person profile view/edit",
+      "AI bio + chapter generation with edit + version snapshots",
+      "PDF export + poster export",
+      "Private unlisted sharing"
+    ],
+    "out_of_scope_until_vault": [
+      "Multi-user real-time collaboration",
+      "Granular roles/permissions",
+      "Full audit log + restore",
+      "Long-term cloud storage and syncing",
+      "Advanced research sources/GEDCOM",
+      "Health/medical history module"
+    ]
+  },
+
+  "definition_of_done": {
+    "quality": [
+      "UI passes wow-factor review: premium materials, smooth motion, crisp typography",
+      "No-hallucination guarantee: AI uses only dataset facts, with traceability",
+      "Exports are print-ready and visually consistent",
+      "Private share is safe by default (noindex, tokenized, optional password)"
+    ],
+    "delivery": [
+      "MVP screens implemented",
+      "All acceptance tests passing",
+      "Basic analytics for funnel (optional)",
+      "Error handling and empty states are polished"
+    ]
+  }
+}

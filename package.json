@@ -4,6 +4,8 @@
   "version": "0.1.0",
   "packageManager": "pnpm@10.0.0",
   "scripts": {
+    "dev": "pnpm --filter @bloodline/web dev",
+    "dev:web": "pnpm --filter @bloodline/web dev",
     "build": "turbo run build",
     "test": "turbo run test",
     "test:unit": "vitest run packages/core/src packages/renderer/src",
@@ -11,6 +13,8 @@
     "test:e2e": "playwright test",
     "test:e2e:update": "playwright test --update-snapshots",
     "e2e:install": "playwright install chromium",
+    "storybook:web": "pnpm --filter @bloodline/web storybook",
+    "storybook:web:build": "pnpm --filter @bloodline/web storybook:build",
     "lint:types": "eslint . --max-warnings=0",
     "commitlint": "commitlint --last",
     "commitlint:range": "commitlint --from HEAD~10 --to HEAD",

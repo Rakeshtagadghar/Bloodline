@@ -32,4 +32,25 @@ describe("layoutTree", () => {
 
     expect(child?.y).toBeGreaterThan(root?.y ?? 0);
   });
+
+  it("orders siblings by age when born dates are available (older first)", () => {
+    const dataset = makeRendererFixtureDataset();
+    dataset.people = dataset.people.map((person) => {
+      if (person.id === "p_child1") {
+        return { ...person, name: "Younger", born: "2000-01-01" };
+      }
+      if (person.id === "p_child2") {
+        return { ...person, name: "Older", born: "1995-01-01" };
+      }
+      return person;
+    });
+
+    const layout = layoutTree("p_root", dataset, { mode: "descendant" });
+    const older = layout.nodes.find((node) => node.id === "p_child2");
+    const younger = layout.nodes.find((node) => node.id === "p_child1");
+
+    expect(older).toBeDefined();
+    expect(younger).toBeDefined();
+    expect((older?.x ?? 0)).toBeLessThan(younger?.x ?? 0);
+  });
 });

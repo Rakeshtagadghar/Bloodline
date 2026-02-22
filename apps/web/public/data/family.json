@@ -1,67 +1,732 @@
 {
   "meta": {
-    "dataset": "my_family",
+    "dataset": "tagadghar_handwritten_family_tree",
     "version": "1.0.0",
-    "displayName": "House Atlas",
-    "motto": "Roots remembered, branches rising"
+    "displayName": "Handwritten Family Tree (abc.jpeg)",
+    "motto": "Transcribed from handwritten lineage chart",
+    "sourceNotes": [
+      "Transcribed from root-level image: abc.jpeg",
+      "Some names/spellings are difficult to read and are marked as approximate",
+      "Side note in image mentions origin from Garh Girnar, Gujarat (handwriting partially unclear)",
+      "Top note references deity Somnath and goddess Hingulaja Mata"
+    ]
   },
   "people": [
     {
-      "id": "p_root",
-      "name": "Rakesh I",
-      "display": { "styleTitle": "Patriarch" },
-      "born": "1954-01-01",
-      "died": "2024-01-01",
-      "house": "Main Branch",
-      "tags": ["founder", "elder"],
-      "privacy": { "living": false }
+      "id": "p_rukmansa",
+      "name": "Rukmansa",
+      "display": {
+        "styleTitle": "Ancestor (from handwritten chart)"
+      },
+      "house": "Main Line",
+      "tags": [
+        "ancestor",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1840"
     },
     {
-      "id": "p_partner",
-      "name": "Mira",
-      "display": { "styleTitle": "Matriarch" },
-      "born": "1958-01-01",
-      "house": "Main Branch",
-      "tags": ["elder"],
-      "privacy": { "living": true }
+      "id": "p_chandusa",
+      "name": "Chandusa",
+      "display": {
+        "styleTitle": "Ancestor"
+      },
+      "house": "Main Line",
+      "tags": [
+        "ancestor",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1870"
     },
     {
-      "id": "p_child1",
-      "name": "Aarav",
-      "display": { "styleTitle": "Heir" },
-      "born": "1988-05-10",
-      "house": "Main Branch",
-      "tags": ["heir", "main"],
-      "privacy": { "living": true }
+      "id": "p_narsingrao",
+      "name": "Narsingrao",
+      "display": {
+        "styleTitle": "Ancestor"
+      },
+      "house": "Main Line",
+      "tags": [
+        "ancestor",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1900"
     },
     {
-      "id": "p_child2",
-      "name": "Kavya",
-      "display": { "styleTitle": "Archivist" },
-      "born": "1990-09-08",
-      "house": "Cadet Branch",
-      "tags": ["archivist", "main"],
-      "privacy": { "living": true }
+      "id": "p_tulsabai_pawar",
+      "name": "Tulsabai Pawar",
+      "display": {
+        "styleTitle": "Spouse of Narsingrao"
+      },
+      "house": "Pawar",
+      "tags": [
+        "spouse",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1905"
     },
     {
-      "id": "p_grand",
-      "name": "Nila",
-      "display": { "styleTitle": "Grandchild" },
-      "born": "2018-03-12",
-      "house": "Cadet Branch",
-      "privacy": { "living": true }
+      "id": "p_timmosa",
+      "name": "Timmosa",
+      "display": {
+        "styleTitle": "Child of Narsingrao"
+      },
+      "house": "Narsingrao Line",
+      "tags": [
+        "branch",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1928"
+    },
+    {
+      "id": "p_rukminibai_habib_unclear",
+      "name": "Rukminibai (surname unclear)",
+      "display": {
+        "styleTitle": "Spouse of Timmosa"
+      },
+      "house": "Unknown",
+      "tags": [
+        "spouse",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1933"
+    },
+    {
+      "id": "p_pakirsa",
+      "name": "Pakirsa",
+      "display": {
+        "styleTitle": "Child of Narsingrao"
+      },
+      "house": "Narsingrao Line",
+      "tags": [
+        "branch",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1931"
+    },
+    {
+      "id": "p_gangubai_unclear",
+      "name": "Gangubai (surname unclear)",
+      "display": {
+        "styleTitle": "Spouse of Pakirsa"
+      },
+      "house": "Unknown",
+      "tags": [
+        "spouse",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1936"
+    },
+    {
+      "id": "p_ambasa",
+      "name": "Ambasa",
+      "display": {
+        "styleTitle": "Child of Narsingrao"
+      },
+      "house": "Ambasa Branch",
+      "tags": [
+        "main-descendant-branch",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1935"
+    },
+    {
+      "id": "p_ambubai_turerao",
+      "name": "Ambubai Turerao",
+      "display": {
+        "styleTitle": "Spouse of Ambasa"
+      },
+      "house": "Turerao",
+      "tags": [
+        "spouse",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1940"
+    },
+    {
+      "id": "p_narmyanrao_unclear",
+      "name": "Narmyanrao (spelling uncertain)",
+      "display": {
+        "styleTitle": "Descendant in Ambasa branch"
+      },
+      "house": "Ambasa Branch",
+      "tags": [
+        "ancestor",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1915"
+    },
+    {
+      "id": "p_tukabai_miskiw_unclear",
+      "name": "Tukabai Miskiw (spelling uncertain)",
+      "display": {
+        "styleTitle": "Spouse of Narmyanrao"
+      },
+      "house": "Miskiw",
+      "tags": [
+        "spouse",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1920"
+    },
+    {
+      "id": "p_vithalrao",
+      "name": "Vithalrao",
+      "display": {
+        "styleTitle": "Descendant"
+      },
+      "house": "Ambasa Branch",
+      "tags": [
+        "ancestor",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1940"
+    },
+    {
+      "id": "p_sharadabai_miskiw_unclear",
+      "name": "Sharadabai Miskiw (spelling uncertain)",
+      "display": {
+        "styleTitle": "Spouse of Vithalrao"
+      },
+      "house": "Miskiw",
+      "tags": [
+        "spouse",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1945"
+    },
+    {
+      "id": "p_sravansa",
+      "name": "Sravansa",
+      "display": {
+        "styleTitle": "Child of Vithalrao"
+      },
+      "house": "Vithalrao Line",
+      "tags": [
+        "branch",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1963"
+    },
+    {
+      "id": "p_shobha_kamlapur",
+      "name": "Shobha Kamlapur",
+      "display": {
+        "styleTitle": "Spouse of Sravansa"
+      },
+      "house": "Kamlapur",
+      "tags": [
+        "spouse",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1972"
+    },
+    {
+      "id": "p_rajkumar",
+      "name": "Rajkumar",
+      "display": {
+        "styleTitle": "Child of Vithalrao"
+      },
+      "house": "Vithalrao Line",
+      "tags": [
+        "branch",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1965"
+    },
+    {
+      "id": "p_sunita_pawar",
+      "name": "Sunita Pawar",
+      "display": {
+        "styleTitle": "Spouse of Rajkumar"
+      },
+      "house": "Pawar",
+      "tags": [
+        "spouse",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1970"
+    },
+    {
+      "id": "p_sanjay_kumar",
+      "name": "Sanjay Kumar",
+      "display": {
+        "styleTitle": "Child of Vithalrao"
+      },
+      "house": "Vithalrao Line",
+      "tags": [
+        "branch",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1969"
+    },
+    {
+      "id": "p_geeta_unclear",
+      "name": "Geeta (surname unclear)",
+      "display": {
+        "styleTitle": "Wife 1 of Sanjay Kumar"
+      },
+      "house": "Unknown",
+      "tags": [
+        "spouse",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1972"
+    },
+    {
+      "id": "p_sodha_janardhan_unclear",
+      "name": "Sodha Janardhan (spelling uncertain)",
+      "display": {
+        "styleTitle": "Wife 2 of Sanjay Kumar"
+      },
+      "house": "Janardhan",
+      "tags": [
+        "spouse",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1975"
+    },
+    {
+      "id": "p_pramila_bai",
+      "name": "Pramila Bai",
+      "display": {
+        "styleTitle": "Child of Vithalrao (per chart placement)"
+      },
+      "house": "Vithalrao Line",
+      "tags": [
+        "current-line-parent",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1973"
+    },
+    {
+      "id": "p_narmyarao_pramila_spouse_unclear",
+      "name": "Narmyarao (surname unclear)",
+      "display": {
+        "styleTitle": "Spouse of Pramila Bai"
+      },
+      "house": "Unknown",
+      "tags": [
+        "spouse",
+        "transcribed",
+        "spelling-unverified"
+      ],
+      "privacy": {
+        "living": false
+      },
+      "born": "1970"
+    },
+    {
+      "id": "p_rakesh",
+      "name": "Rakesh",
+      "display": {
+        "styleTitle": "Current Generation"
+      },
+      "house": "Sravan Line",
+      "tags": [
+        "current-generation",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1993"
+    },
+    {
+      "id": "p_amulya_gongle",
+      "name": "Amulya Gongle",
+      "display": {
+        "styleTitle": "Spouse of Rakesh"
+      },
+      "house": "Gongle",
+      "tags": [
+        "spouse",
+        "current-generation",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1995-10-31"
+    },
+    {
+      "id": "p_amrish",
+      "name": "Amrish",
+      "display": {
+        "styleTitle": "Current Generation"
+      },
+      "house": "Sravan Line",
+      "tags": [
+        "current-generation",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1994"
+    },
+    {
+      "id": "p_ashwini",
+      "name": "Ashwini",
+      "display": {
+        "styleTitle": "Current Generation"
+      },
+      "house": "Sravan Line",
+      "tags": [
+        "current-generation",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "1996"
+    },
+    {
+      "id": "p_ritvik_tagadghar",
+      "name": "Ritvik Tagadghar",
+      "display": {
+        "styleTitle": "Child of Rakesh & Amulya"
+      },
+      "house": "Tagadghar",
+      "tags": [
+        "child-generation",
+        "transcribed"
+      ],
+      "privacy": {
+        "living": true
+      },
+      "born": "2025"
     }
   ],
   "relationships": [
-    { "id": "rel_partner_1", "type": "partner", "from": "p_root", "to": "p_partner" },
-    { "id": "rel_parent_1", "type": "parent", "parentId": "p_root", "childId": "p_child1" },
-    { "id": "rel_parent_2", "type": "parent", "parentId": "p_partner", "childId": "p_child1" },
-    { "id": "rel_parent_3", "type": "parent", "parentId": "p_root", "childId": "p_child2" },
-    { "id": "rel_parent_4", "type": "parent", "parentId": "p_child1", "childId": "p_grand" }
+    {
+      "id": "rel_parent_rukmansa_chandusa",
+      "type": "parent",
+      "parentId": "p_rukmansa",
+      "childId": "p_chandusa"
+    },
+    {
+      "id": "rel_parent_chandusa_narsingrao",
+      "type": "parent",
+      "parentId": "p_chandusa",
+      "childId": "p_narsingrao"
+    },
+    {
+      "id": "rel_partner_narsingrao_tulsabai",
+      "type": "partner",
+      "from": "p_narsingrao",
+      "to": "p_tulsabai_pawar",
+      "status": "married"
+    },
+    {
+      "id": "rel_parent_narsingrao_timmosa",
+      "type": "parent",
+      "parentId": "p_narsingrao",
+      "childId": "p_timmosa"
+    },
+    {
+      "id": "rel_parent_tulsabai_timmosa",
+      "type": "parent",
+      "parentId": "p_tulsabai_pawar",
+      "childId": "p_timmosa"
+    },
+    {
+      "id": "rel_parent_narsingrao_pakirsa",
+      "type": "parent",
+      "parentId": "p_narsingrao",
+      "childId": "p_pakirsa"
+    },
+    {
+      "id": "rel_parent_tulsabai_pakirsa",
+      "type": "parent",
+      "parentId": "p_tulsabai_pawar",
+      "childId": "p_pakirsa"
+    },
+    {
+      "id": "rel_parent_narsingrao_ambasa",
+      "type": "parent",
+      "parentId": "p_narsingrao",
+      "childId": "p_ambasa"
+    },
+    {
+      "id": "rel_parent_tulsabai_ambasa",
+      "type": "parent",
+      "parentId": "p_tulsabai_pawar",
+      "childId": "p_ambasa"
+    },
+    {
+      "id": "rel_partner_timmosa_rukminibai",
+      "type": "partner",
+      "from": "p_timmosa",
+      "to": "p_rukminibai_habib_unclear",
+      "status": "married"
+    },
+    {
+      "id": "rel_partner_pakirsa_gangubai",
+      "type": "partner",
+      "from": "p_pakirsa",
+      "to": "p_gangubai_unclear",
+      "status": "married"
+    },
+    {
+      "id": "rel_partner_ambasa_ambubai",
+      "type": "partner",
+      "from": "p_ambasa",
+      "to": "p_ambubai_turerao",
+      "status": "married"
+    },
+    {
+      "id": "rel_parent_ambasa_narmyanrao",
+      "type": "parent",
+      "parentId": "p_ambasa",
+      "childId": "p_narmyanrao_unclear"
+    },
+    {
+      "id": "rel_parent_ambubai_narmyanrao",
+      "type": "parent",
+      "parentId": "p_ambubai_turerao",
+      "childId": "p_narmyanrao_unclear"
+    },
+    {
+      "id": "rel_partner_narmyanrao_tukabai",
+      "type": "partner",
+      "from": "p_narmyanrao_unclear",
+      "to": "p_tukabai_miskiw_unclear",
+      "status": "married"
+    },
+    {
+      "id": "rel_parent_narmyanrao_vithalrao",
+      "type": "parent",
+      "parentId": "p_narmyanrao_unclear",
+      "childId": "p_vithalrao"
+    },
+    {
+      "id": "rel_parent_tukabai_vithalrao",
+      "type": "parent",
+      "parentId": "p_tukabai_miskiw_unclear",
+      "childId": "p_vithalrao"
+    },
+    {
+      "id": "rel_partner_vithalrao_sharadabai",
+      "type": "partner",
+      "from": "p_vithalrao",
+      "to": "p_sharadabai_miskiw_unclear",
+      "status": "married"
+    },
+    {
+      "id": "rel_parent_vithalrao_sravansa",
+      "type": "parent",
+      "parentId": "p_vithalrao",
+      "childId": "p_sravansa"
+    },
+    {
+      "id": "rel_parent_sharadabai_sravansa",
+      "type": "parent",
+      "parentId": "p_sharadabai_miskiw_unclear",
+      "childId": "p_sravansa"
+    },
+    {
+      "id": "rel_parent_vithalrao_rajkumar",
+      "type": "parent",
+      "parentId": "p_vithalrao",
+      "childId": "p_rajkumar"
+    },
+    {
+      "id": "rel_parent_sharadabai_rajkumar",
+      "type": "parent",
+      "parentId": "p_sharadabai_miskiw_unclear",
+      "childId": "p_rajkumar"
+    },
+    {
+      "id": "rel_parent_vithalrao_sanjay",
+      "type": "parent",
+      "parentId": "p_vithalrao",
+      "childId": "p_sanjay_kumar"
+    },
+    {
+      "id": "rel_parent_sharadabai_sanjay",
+      "type": "parent",
+      "parentId": "p_sharadabai_miskiw_unclear",
+      "childId": "p_sanjay_kumar"
+    },
+    {
+      "id": "rel_parent_vithalrao_pramila",
+      "type": "parent",
+      "parentId": "p_vithalrao",
+      "childId": "p_pramila_bai"
+    },
+    {
+      "id": "rel_parent_sharadabai_pramila",
+      "type": "parent",
+      "parentId": "p_sharadabai_miskiw_unclear",
+      "childId": "p_pramila_bai"
+    },
+    {
+      "id": "rel_partner_sravansa_shobha",
+      "type": "partner",
+      "from": "p_sravansa",
+      "to": "p_shobha_kamlapur",
+      "status": "married"
+    },
+    {
+      "id": "rel_partner_rajkumar_sunita",
+      "type": "partner",
+      "from": "p_rajkumar",
+      "to": "p_sunita_pawar",
+      "status": "married"
+    },
+    {
+      "id": "rel_partner_sanjay_geeta",
+      "type": "partner",
+      "from": "p_sanjay_kumar",
+      "to": "p_geeta_unclear",
+      "status": "married"
+    },
+    {
+      "id": "rel_partner_sanjay_sodha",
+      "type": "partner",
+      "from": "p_sanjay_kumar",
+      "to": "p_sodha_janardhan_unclear",
+      "status": "married"
+    },
+    {
+      "id": "rel_partner_pramila_narmyarao",
+      "type": "partner",
+      "from": "p_pramila_bai",
+      "to": "p_narmyarao_pramila_spouse_unclear",
+      "status": "married"
+    },
+    {
+      "id": "rel_parent_sravansa_rakesh",
+      "type": "parent",
+      "parentId": "p_sravansa",
+      "childId": "p_rakesh"
+    },
+    {
+      "id": "rel_parent_shobha_rakesh",
+      "type": "parent",
+      "parentId": "p_shobha_kamlapur",
+      "childId": "p_rakesh"
+    },
+    {
+      "id": "rel_parent_sravansa_amrish",
+      "type": "parent",
+      "parentId": "p_sravansa",
+      "childId": "p_amrish"
+    },
+    {
+      "id": "rel_parent_shobha_amrish",
+      "type": "parent",
+      "parentId": "p_shobha_kamlapur",
+      "childId": "p_amrish"
+    },
+    {
+      "id": "rel_parent_sravansa_ashwini",
+      "type": "parent",
+      "parentId": "p_sravansa",
+      "childId": "p_ashwini"
+    },
+    {
+      "id": "rel_parent_shobha_ashwini",
+      "type": "parent",
+      "parentId": "p_shobha_kamlapur",
+      "childId": "p_ashwini"
+    },
+    {
+      "id": "rel_partner_rakesh_amulya",
+      "type": "partner",
+      "from": "p_rakesh",
+      "to": "p_amulya_gongle",
+      "status": "married"
+    },
+    {
+      "id": "rel_parent_rakesh_ritvik",
+      "type": "parent",
+      "parentId": "p_rakesh",
+      "childId": "p_ritvik_tagadghar"
+    },
+    {
+      "id": "rel_parent_amulya_ritvik",
+      "type": "parent",
+      "parentId": "p_amulya_gongle",
+      "childId": "p_ritvik_tagadghar"
+    }
   ],
   "ui": {
     "theme": "royal-archive",
-    "defaultRootPersonId": "p_root",
+    "defaultRootPersonId": "p_rukmansa",
     "layout": "descendant",
     "featureFlags": {
       "editor": false,
@@ -69,6 +734,12 @@
       "succession": false,
       "export": true,
       "privacyMode": true
+    },
+    "labels": {
+      "familyName": "Handwritten Lineage (Transcribed)"
+    },
+    "branding": {
+      "watermarkText": "abc.jpeg family tree transcription"
     }
   }
 }

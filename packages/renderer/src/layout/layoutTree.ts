@@ -33,8 +33,67 @@ export interface LayoutOptions {
   yGap?: number;
 }
 
-function sortIds(ids: Iterable<string>): string[] {
-  return [...ids].sort((a, b) => a.localeCompare(b));
+type PersonOrderRecord = {
+  id: string;
+  name: string;
+  born: string | null;
+};
+
+function normalizeBorn(value: string | undefined): string | null {
+  if (!value) {
+    return null;
+  }
+  const trimmed = value.trim();
+  return trimmed.length > 0 ? trimmed : null;
+}
+
+function buildPersonOrderMap(dataset: FamilyDataset): Map<string, PersonOrderRecord> {
+  const map = new Map<string, PersonOrderRecord>();
+  for (const person of dataset.people) {
+    map.set(person.id, {
+      id: person.id,
+      name: person.displayName ?? person.name,
+      born: normalizeBorn(person.born)
+    });
+  }
+  return map;
+}
+
+function comparePersonIdsByAgeThenName(
+  aId: string,
+  bId: string,
+  personOrderMap: ReadonlyMap<string, PersonOrderRecord>
+): number {
+  const aPerson = personOrderMap.get(aId);
+  const bPerson = personOrderMap.get(bId);
+
+  const aBorn = aPerson?.born ?? null;
+  const bBorn = bPerson?.born ?? null;
+  if (aBorn && bBorn && aBorn !== bBorn) {
+    return aBorn.localeCompare(bBorn);
+  }
+  if (aBorn && !bBorn) {
+    return -1;
+  }
+  if (!aBorn && bBorn) {
+    return 1;
+  }
+
+  const aName = aPerson?.name ?? aId;
+  const bName = bPerson?.name ?? bId;
+  const byName = aName.localeCompare(bName);
+  if (byName !== 0) {
+    return byName;
+  }
+
+  return aId.localeCompare(bId);
+}
+
+function sortIds(
+  ids: Iterable<string>,
+  personOrderMap: ReadonlyMap<string, PersonOrderRecord>
+): string[] {
+  return [...ids].sort((a, b) => comparePersonIdsByAgeThenName(a, b, personOrderMap));
 }
 
 function average(values: number[]): number | null {
@@ -49,7 +108,11 @@ function average(values: number[]): number | null {
   return total / values.length;
 }
 
-function computeDescendantDepths(rootId: string, dataset: FamilyDataset): Map<string, number> {
+function computeDescendantDepths(
+  rootId: string,
+  dataset: FamilyDataset,
+  personOrderMap: ReadonlyMap<string, PersonOrderRecord>
+): Map<string, number> {
   const graph = buildAdjacency(dataset);
   const depths = new Map<string, number>([[rootId, 0]]);
   const queue: string[] = [rootId];
@@ -60,14 +123,14 @@ function computeDescendantDepths(rootId: string, dataset: FamilyDataset): Map<st
       continue;
     }
     const currentDepth = depths.get(current) ?? 0;
-    const partners = sortIds(graph.partnersByPerson.get(current) ?? []);
+    const partners = sortIds(graph.partnersByPerson.get(current) ?? [], personOrderMap);
     for (const partner of partners) {
       if (!depths.has(partner)) {
         depths.set(partner, currentDepth);
         queue.push(partner);
       }
     }
-    const children = sortIds(graph.childrenByParent.get(current) ?? []);
+    const children = sortIds(graph.childrenByParent.get(current) ?? [], personOrderMap);
     for (const child of children) {
       const nextDepth = currentDepth + 1;
       const knownDepth = depths.get(child);
@@ -147,7 +210,8 @@ function reorderLevelsByAnchors(
   levels: Map<number, string[]>,
   depths: Map<string, number>,
   graph: ReturnType<typeof buildAdjacency>,
-  referenceXById: ReadonlyMap<string, number>
+  referenceXById: ReadonlyMap<string, number>,
+  personOrderMap: ReadonlyMap<string, PersonOrderRecord>
 ): Map<number, string[]> {
   const next = new Map<number, string[]>();
 
@@ -179,7 +243,12 @@ function reorderLevelsByAnchors(
       return { id, rank: 2, score: 0 };
     });
 
-    scored.sort((a, b) => a.rank - b.rank || a.score - b.score || a.id.localeCompare(b.id));
+    scored.sort(
+      (a, b) =>
+        a.rank - b.rank ||
+        a.score - b.score ||
+        comparePersonIdsByAgeThenName(a.id, b.id, personOrderMap)
+    );
     next.set(
       depth,
       scored.map((entry) => entry.id)
@@ -204,7 +273,8 @@ export function layoutTree(
     // Descendant mode is implemented first; other modes fall back deterministically.
   }
 
-  const depths = computeDescendantDepths(rootPersonId, dataset);
+  const personOrderMap = buildPersonOrderMap(dataset);
+  const depths = computeDescendantDepths(rootPersonId, dataset, personOrderMap);
   if (!depths.has(rootPersonId)) {
     depths.set(rootPersonId, 0);
   }
@@ -217,7 +287,10 @@ export function layoutTree(
     levels.set(depth, level);
   }
   for (const [depth, ids] of levels) {
-    levels.set(depth, ids.sort((a, b) => a.localeCompare(b)));
+    levels.set(
+      depth,
+      ids.sort((a, b) => comparePersonIdsByAgeThenName(a, b, personOrderMap))
+    );
   }
 
   const edges = buildLayoutEdges(dataset, depths);
@@ -229,7 +302,7 @@ export function layoutTree(
     partnerGap
   );
   const referenceXById = new Map(provisionalNodes.map((node) => [node.id, node.x] as const));
-  const reorderedLevels = reorderLevelsByAnchors(levels, depths, graph, referenceXById);
+  const reorderedLevels = reorderLevelsByAnchors(levels, depths, graph, referenceXById, personOrderMap);
 
   const nodes = layoutPartners(
     buildLevelNodes(reorderedLevels, nodeWidth, nodeHeight, xGap, yGap),

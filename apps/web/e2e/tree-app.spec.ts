@@ -6,20 +6,20 @@ test.describe("Bloodline Next app /tree", () => {
   });
 
   test("loads fixture dataset and shows root node + details panel", async ({ page }) => {
-    await expect(page.getByTestId("dataset-status")).toContainText("House Atlas");
-    await expect(page.getByTestId("node-p_root")).toBeVisible();
+    await expect(page.getByTestId("dataset-status")).toContainText("Handwritten Family Tree (abc.jpeg)");
+    await expect(page.getByTestId("node-p_rukmansa")).toBeVisible();
     await expect(page.getByLabel("Royal Details Panel")).toBeVisible();
-    await expect(page.getByTestId("details-person-name")).toHaveText("Rakesh I");
+    await expect(page.getByTestId("details-person-name")).toHaveText("Rukmansa");
 
     await expect(page.locator('section[aria-label="Tree workspace"]')).toHaveScreenshot("app-tree-initial.png");
   });
 
   test("clicking a node updates details and highlights relatives", async ({ page }) => {
-    await page.getByTestId("node-p_child1").click();
+    await page.getByTestId("node-p_narsingrao").click();
 
-    await expect(page.getByTestId("details-person-name")).toHaveText("Aarav");
-    await expect(page.getByTestId("node-p_root")).toHaveClass(/nodeHighlight/);
-    await expect(page.getByTestId("node-p_grand")).toHaveClass(/nodeHighlight/);
+    await expect(page.getByTestId("details-person-name")).toHaveText("Narsingrao");
+    await expect(page.getByTestId("node-p_chandusa")).toHaveClass(/nodeHighlight/);
+    await expect(page.getByTestId("node-p_ambasa")).toHaveClass(/nodeHighlight/);
 
     await expect(page.locator("body")).toHaveScreenshot("app-tree-selected-child1.png", {
       maxDiffPixelRatio: 0.02
@@ -27,13 +27,13 @@ test.describe("Bloodline Next app /tree", () => {
   });
 
   test("search and filters dim non-matching nodes", async ({ page }) => {
-    await page.getByPlaceholder("Search by name...").fill("a");
-    await page.getByLabel("Filter by branch").selectOption("Main Branch");
+    await page.getByPlaceholder("Search by name...").fill("rakesh");
+    await page.getByLabel("Filter by branch").selectOption("Pramila Line");
     await page.getByLabel("Filter by living status").selectOption("living");
 
-    await expect(page.getByTestId("node-p_root")).toHaveClass(/nodeDimmed/);
-    await expect(page.getByTestId("node-p_child1")).not.toHaveClass(/nodeDimmed/);
-    await expect(page.getByTestId("node-p_child2")).toHaveClass(/nodeDimmed/);
+    await expect(page.getByTestId("node-p_rukmansa")).toHaveClass(/nodeDimmed/);
+    await expect(page.getByTestId("node-p_rakesh")).not.toHaveClass(/nodeDimmed/);
+    await expect(page.getByTestId("node-p_amrish")).toHaveClass(/nodeDimmed/);
 
     await expect(page.locator('section[aria-label="Tree workspace"]')).toHaveScreenshot("app-tree-filters.png");
   });
@@ -41,11 +41,11 @@ test.describe("Bloodline Next app /tree", () => {
   test("search result selection recenters viewport and updates details", async ({ page }) => {
     const before = await page.getByTestId("viewport-readout").textContent();
 
-    await page.getByPlaceholder("Search by name...").fill("nila");
-    await expect(page.getByTestId("search-result-p_grand")).toBeVisible();
-    await page.getByTestId("search-result-p_grand").click();
+    await page.getByPlaceholder("Search by name...").fill("ashw");
+    await expect(page.getByTestId("search-result-p_ashwini")).toBeVisible();
+    await page.getByTestId("search-result-p_ashwini").click();
 
-    await expect(page.getByTestId("details-person-name")).toHaveText("Nila");
+    await expect(page.getByTestId("details-person-name")).toHaveText("Ashwini");
     const after = await page.getByTestId("viewport-readout").textContent();
     expect(after).not.toBe(before);
   });
