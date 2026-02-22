@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMid slice">
+  <defs>
+    <radialGradient id="g1" cx="18%" cy="14%" r="55%">
+      <stop offset="0%" stop-color="#e0b64d" stop-opacity=".14"/>
+      <stop offset="45%" stop-color="#d1a53f" stop-opacity=".04"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="g2" cx="82%" cy="18%" r="45%">
+      <stop offset="0%" stop-color="#9ec8ff" stop-opacity=".08"/>
+      <stop offset="50%" stop-color="#6aa6ff" stop-opacity=".02"/>
+      <stop offset="100%" stop-color="#000000" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="gold" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6f5019"/>
+      <stop offset="25%" stop-color="#d6b04b"/>
+      <stop offset="50%" stop-color="#fff1ba"/>
+      <stop offset="75%" stop-color="#b48427"/>
+      <stop offset="100%" stop-color="#6c4b17"/>
+    </linearGradient>
+    <pattern id="grid" width="36" height="36" patternUnits="userSpaceOnUse">
+      <path d="M36 0H0V36" fill="none" stroke="#d4af37" stroke-opacity=".035" stroke-width="1"/>
+    </pattern>
+  </defs>
+
+  <rect width="1600" height="900" fill="#070b12"/>
+  <rect width="1600" height="900" fill="url(#grid)"/>
+  <rect width="1600" height="900" fill="url(#g1)"/>
+  <rect width="1600" height="900" fill="url(#g2)"/>
+
+  <g opacity=".12">
+    <path d="M-20 140L420 -40L800 180L1180 -30L1650 160L1650 220L1180 30L800 240L420 20L-20 200Z" fill="#6d1c20"/>
+    <path d="M-20 520L360 360L800 560L1240 340L1650 500L1650 620L1240 440L800 660L360 440L-20 620Z" fill="#0f3d52"/>
+  </g>
+
+  <g opacity=".23" fill="none" stroke="url(#gold)" stroke-width="2">
+    <path d="M70 120c55-85 160-94 218-45 39 34 36 84-6 108-26 15-58 16-85 4"/>
+    <path d="M1530 120c-55-85-160-94-218-45-39 34-36 84 6 108 26 15 58 16 85 4"/>
+    <path d="M80 780c44-76 126-74 160-31 23 29 17 64-14 81-19 10-42 10-61 2"/>
+    <path d="M1520 780c-44-76-126-74-160-31-23 29-17 64 14 81 19 10 42 10 61 2"/>
+  </g>
+
+  <g opacity=".08" fill="none" stroke="#f5d992" stroke-width="1.5">
+    <path d="M240 100c35 14 55 39 56 72"/>
+    <path d="M1360 100c-35 14-55 39-56 72"/>
+    <path d="M270 810c22-17 38-40 40-69"/>
+    <path d="M1330 810c-22-17-38-40-40-69"/>
+  </g>
+
+  <g opacity=".12" fill="none" stroke="url(#gold)" stroke-width="1">
+    <circle cx="800" cy="450" r="260"/>
+    <circle cx="800" cy="450" r="340"/>
+    <path d="M800 94V806M444 450H1156M548 198L1052 702M1052 198L548 702"/>
+  </g>
+
+  <g opacity=".07" fill="#f3dc9a">
+    <circle cx="800" cy="450" r="3"/>
+    <circle cx="480" cy="250" r="2"/>
+    <circle cx="1135" cy="270" r="2"/>
+    <circle cx="590" cy="650" r="2"/>
+    <circle cx="1020" cy="640" r="2"/>
+  </g>
+</svg>

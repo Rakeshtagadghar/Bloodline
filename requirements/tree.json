@@ -1,0 +1,957 @@
+{
+  "specVersion": "1.0.0",
+  "project": {
+    "name": "Royal Family Tree UI",
+    "codename": "HouseAtlas",
+    "goal": "Build a JSON-driven interactive family tree for the user's own family, presented with a premium 'Royal Archive' look & feel. The UI must be stunning, fast (pan/zoom), accessible, and support editing + exports. Development must follow TDD: tests first for all core modules and critical UI flows.",
+    "nonGoals": [
+      "Not a public authoritative royal dataset product",
+      "Not an AI chatbot product (optional later)",
+      "Not a full genealogy standards compliance suite (GEDCOM import optional)"
+    ]
+  },
+  "stack": {
+    "frontend": {
+      "framework": "Next.js",
+      "language": "TypeScript",
+      "ui": {
+        "components": "MUI v7 with custom theming and components for royal style",
+        "styling": "MUI theme + CSS variables (tokens) + optional emotion",
+        "icons": "lucide-react (royal-styled custom set allowed)"
+      },
+      "visualization": {
+        "engine": "d3",
+        "wrapper": "custom renderer on HTMLCanvas/DOM hybrid (SVG fallback supported)",
+        "layout": "tree + partner links (custom family layout)"
+      },
+      "state": {
+        "clientCache": "TanStack Query for async",
+        "appState": "Zustand (light) or React context for view controls",
+        "forms": "react-hook-form + zod"
+      }
+    },
+    "backend": {
+      "mode": "Next.js API routes (v1)",
+      "storage": "JSON file store for v1; pluggable repository interface for DB later",
+      "auth": "optional (v2) NextAuth"
+    },
+    "testing": {
+      "unit": "Vitest",
+      "react": "React Testing Library",
+      "e2e": "Playwright",
+      "contract": "Zod schemas + JSON schema generation",
+      "visual": "Playwright screenshots (golden images)"
+    },
+    "tooling": {
+      "lint": "eslint",
+      "format": "prettier",
+      "typecheck": "tsc",
+      "ci": "GitHub Actions"
+    }
+  },
+  "architecture": {
+    "monorepo": {
+      "type": "turborepo",
+      "apps": [
+        {
+          "name": "web",
+          "path": "apps/web",
+          "purpose": "Next.js web UI"
+        }
+      ],
+      "packages": [
+        {
+          "name": "core",
+          "path": "packages/core",
+          "purpose": "Domain model, zod schemas, selectors, graph utilities"
+        },
+        {
+          "name": "ui",
+          "path": "packages/ui",
+          "purpose": "Royal theme tokens, shared components (NodeCard, Crest, Panels)"
+        },
+        {
+          "name": "renderer",
+          "path": "packages/renderer",
+          "purpose": "Tree layout, viewport transforms, hit-testing, rendering adapters"
+        },
+        {
+          "name": "testkit",
+          "path": "packages/testkit",
+          "purpose": "Fixtures, factories, helpers for unit/e2e tests"
+        }
+      ]
+    },
+    "keyPrinciples": [
+      "JSON is the single source of truth",
+      "Everything derived (generations, layout positions, relationship paths) must be computed and testable",
+      "Renderer is deterministic: given dataset + view state => stable layout (important for TDD + visual snapshots)",
+      "Accessibility: keyboard navigation + focus outlines + screen reader labels on list/ledger views",
+      "Performance: virtualized rendering and incremental layout updates for large families"
+    ]
+  },
+  "dataModel": {
+    "fileFormat": {
+      "rootType": "FamilyDataset",
+      "notes": [
+        "Graph-based model: people[] + relationships[]",
+        "Tree views are derived from graph by selecting a root and building ancestor/descendant projections",
+        "Partner relationships are edges; can support multiple partners"
+      ]
+    },
+    "types": {
+      "FamilyDataset": {
+        "required": ["meta", "people", "relationships", "ui"],
+        "properties": {
+          "meta": { "$ref": "#/dataModel/types/Meta" },
+          "people": {
+            "type": "array",
+            "items": { "$ref": "#/dataModel/types/Person" }
+          },
+          "relationships": {
+            "type": "array",
+            "items": { "$ref": "#/dataModel/types/Relationship" }
+          },
+          "events": {
+            "type": "array",
+            "items": { "$ref": "#/dataModel/types/Event" },
+            "optional": true
+          },
+          "succession": {
+            "$ref": "#/dataModel/types/Succession",
+            "optional": true
+          },
+          "media": {
+            "type": "array",
+            "items": { "$ref": "#/dataModel/types/MediaAsset" },
+            "optional": true
+          },
+          "ui": { "$ref": "#/dataModel/types/UIConfig" }
+        }
+      },
+      "Meta": {
+        "required": ["dataset", "version", "displayName"],
+        "properties": {
+          "dataset": { "type": "string", "example": "my_family" },
+          "version": { "type": "string", "example": "1.0.0" },
+          "displayName": { "type": "string", "example": "House of Tagadghar" },
+          "motto": { "type": "string", "optional": true },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time",
+            "optional": true
+          },
+          "updatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "optional": true
+          },
+          "sourceNotes": {
+            "type": "array",
+            "items": { "type": "string" },
+            "optional": true
+          }
+        }
+      },
+      "Person": {
+        "required": ["id", "name"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^p_[a-zA-Z0-9_\\-]+$" },
+          "name": { "type": "string" },
+          "displayName": { "type": "string", "optional": true },
+          "gender": {
+            "type": "string",
+            "enum": ["female", "male", "nonbinary", "unknown"],
+            "optional": true
+          },
+          "born": { "type": "string", "format": "date", "optional": true },
+          "died": { "type": "string", "format": "date", "optional": true },
+          "placeOfBirth": { "type": "string", "optional": true },
+          "currentLocation": { "type": "string", "optional": true },
+          "tags": {
+            "type": "array",
+            "items": { "type": "string" },
+            "optional": true
+          },
+          "house": { "type": "string", "optional": true },
+          "display": {
+            "$ref": "#/dataModel/types/PersonDisplay",
+            "optional": true
+          },
+          "bio": { "type": "string", "optional": true },
+          "privacy": {
+            "$ref": "#/dataModel/types/PersonPrivacy",
+            "optional": true
+          },
+          "mediaIds": {
+            "type": "array",
+            "items": { "type": "string" },
+            "optional": true
+          }
+        }
+      },
+      "PersonDisplay": {
+        "required": [],
+        "properties": {
+          "styleTitle": {
+            "type": "string",
+            "optional": true,
+            "example": "Lady of the House"
+          },
+          "crestId": { "type": "string", "optional": true },
+          "badgeIds": {
+            "type": "array",
+            "items": { "type": "string" },
+            "optional": true
+          },
+          "accentColorToken": {
+            "type": "string",
+            "optional": true,
+            "example": "gold.500"
+          }
+        }
+      },
+      "PersonPrivacy": {
+        "required": [],
+        "properties": {
+          "visibility": {
+            "type": "string",
+            "enum": ["public", "family", "private"],
+            "default": "family"
+          },
+          "hideDates": { "type": "boolean", "default": false },
+          "hideLocation": { "type": "boolean", "default": false },
+          "living": { "type": "boolean", "optional": true }
+        }
+      },
+      "Relationship": {
+        "required": ["id", "type"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^rel_[a-zA-Z0-9_\\-]+$" },
+          "type": {
+            "type": "string",
+            "enum": ["parent", "partner", "guardian", "step_parent"]
+          },
+          "parentId": { "type": "string", "optional": true },
+          "childId": { "type": "string", "optional": true },
+          "from": { "type": "string", "optional": true },
+          "to": { "type": "string", "optional": true },
+          "kind": {
+            "type": "string",
+            "enum": ["biological", "adopted", "unknown"],
+            "optional": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "married",
+              "partnered",
+              "divorced",
+              "separated",
+              "widowed"
+            ],
+            "optional": true
+          },
+          "startDate": { "type": "string", "format": "date", "optional": true },
+          "endDate": { "type": "string", "format": "date", "optional": true },
+          "notes": { "type": "string", "optional": true },
+          "privacy": {
+            "type": "string",
+            "enum": ["public", "family", "private"],
+            "default": "family"
+          }
+        },
+        "constraints": [
+          "If type=parent then parentId and childId are required; from/to must be absent",
+          "If type=partner then from and to are required; parentId/childId must be absent"
+        ]
+      },
+      "Event": {
+        "required": ["id", "type", "date"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^ev_[a-zA-Z0-9_\\-]+$" },
+          "type": {
+            "type": "string",
+            "enum": [
+              "birth",
+              "death",
+              "marriage",
+              "divorce",
+              "move",
+              "achievement",
+              "note"
+            ]
+          },
+          "date": { "type": "string", "format": "date" },
+          "title": { "type": "string", "optional": true },
+          "description": { "type": "string", "optional": true },
+          "personIds": {
+            "type": "array",
+            "items": { "type": "string" },
+            "optional": true
+          },
+          "relationshipId": { "type": "string", "optional": true },
+          "mediaIds": {
+            "type": "array",
+            "items": { "type": "string" },
+            "optional": true
+          },
+          "privacy": {
+            "type": "string",
+            "enum": ["public", "family", "private"],
+            "default": "family"
+          }
+        }
+      },
+      "Succession": {
+        "required": ["asOf", "mode", "list"],
+        "properties": {
+          "asOf": { "type": "string", "format": "date" },
+          "mode": {
+            "type": "string",
+            "enum": ["manual", "computed"],
+            "default": "manual"
+          },
+          "list": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "required": ["rank", "personId"],
+              "properties": {
+                "rank": { "type": "number", "minimum": 1 },
+                "personId": { "type": "string" },
+                "label": { "type": "string", "optional": true }
+              }
+            }
+          },
+          "rulesNote": { "type": "string", "optional": true }
+        }
+      },
+      "MediaAsset": {
+        "required": ["id", "type", "url"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^m_[a-zA-Z0-9_\\-]+$" },
+          "type": {
+            "type": "string",
+            "enum": ["portrait", "photo", "document", "audio", "video"]
+          },
+          "url": { "type": "string" },
+          "caption": { "type": "string", "optional": true },
+          "attribution": { "type": "string", "optional": true },
+          "privacy": {
+            "type": "string",
+            "enum": ["public", "family", "private"],
+            "default": "family"
+          }
+        }
+      },
+      "UIConfig": {
+        "required": ["theme", "defaultRootPersonId", "layout"],
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": ["royal-archive", "royal-night", "royal-parchment"],
+            "default": "royal-archive"
+          },
+          "defaultRootPersonId": { "type": "string" },
+          "layout": {
+            "type": "string",
+            "enum": ["descendant", "ancestor", "both", "radial"],
+            "default": "descendant"
+          },
+          "featureFlags": {
+            "type": "object",
+            "properties": {
+              "editor": { "type": "boolean", "default": true },
+              "timeline": { "type": "boolean", "default": true },
+              "succession": { "type": "boolean", "default": true },
+              "export": { "type": "boolean", "default": true },
+              "privacyMode": { "type": "boolean", "default": true }
+            }
+          },
+          "labels": {
+            "type": "object",
+            "properties": {
+              "familyName": { "type": "string", "optional": true },
+              "motto": { "type": "string", "optional": true }
+            }
+          },
+          "branding": {
+            "type": "object",
+            "properties": {
+              "crest": { "type": "string", "optional": true },
+              "watermarkText": {
+                "type": "string",
+                "optional": true,
+                "example": "Royal Archive of the House"
+              }
+            }
+          }
+        }
+      }
+    },
+    "validationRules": [
+      "All people.id must be unique",
+      "All relationships.id must be unique",
+      "All relationships must reference existing people IDs",
+      "No cycles in parent-child graph (prevent ancestor loops)",
+      "A person can have 0..2 biological parents (configurable)",
+      "Partner relationship must be symmetric (from/to; renderer treats as undirected)",
+      "Privacy rules: if person privacy=private, hide from non-authorized views (v2)"
+    ]
+  },
+  "royalUIDesignSystem": {
+    "themeTokens": {
+      "colors": {
+        "inkNavy": "#0B1020",
+        "midnight": "#090B12",
+        "burgundy": "#4A1020",
+        "parchment": "#F4E7D0",
+        "gold": "#D4AF37",
+        "antiqueGold": "#B89B3C",
+        "stone": "#C7C2B8",
+        "emeraldAccent": "#0F6B5B"
+      },
+      "typography": {
+        "displayFont": "Serif display (e.g., Playfair Display / Cinzel / EB Garamond)",
+        "bodyFont": "Inter / system-ui",
+        "scale": {
+          "h1": "48",
+          "h2": "34",
+          "h3": "24",
+          "body": "16",
+          "caption": "12"
+        }
+      },
+      "radii": {
+        "card": 18,
+        "button": 14,
+        "pill": 999
+      },
+      "shadows": {
+        "card": "soft + warm",
+        "hover": "slightly stronger"
+      },
+      "textures": {
+        "parchmentGrain": "subtle background noise",
+        "goldFoil": "gradient overlay for borders"
+      }
+    },
+    "components": {
+      "RoyalNodeCard": {
+        "description": "Person node rendered as a royal placard with oval portrait frame, name, styleTitle, badges.",
+        "states": ["default", "hover", "selected", "dimmed", "collapsed"],
+        "slots": [
+          "portrait",
+          "crestFallback",
+          "name",
+          "styleTitle",
+          "badges",
+          "miniFacts"
+        ]
+      },
+      "CrestBadge": {
+        "description": "Small emblem badge. Can display crown/crest icons, used for roles like Patriarch/Matriarch."
+      },
+      "WaxSealModal": {
+        "description": "Modal/dialog with wax-seal animation on open; used for edit confirmations and exports."
+      },
+      "ScrollPanel": {
+        "description": "Side panel that looks like a scroll ledger for details + editing forms."
+      },
+      "RoyalToolbar": {
+        "description": "Top toolbar with search, filters, view toggles, and export actions."
+      },
+      "Minimap": {
+        "description": "Small minimap of tree in corner with viewport box."
+      }
+    }
+  },
+  "features": [
+    {
+      "id": "F1",
+      "name": "Dataset loading + validation",
+      "mustHave": true,
+      "description": "Load dataset JSON, validate with zod, show graceful errors. Provide a dataset inspector view for debugging.",
+      "acceptanceCriteria": [
+        "Invalid JSON shows a royal-styled error parchment panel with exact schema errors",
+        "Valid dataset renders initial tree using ui.defaultRootPersonId"
+      ],
+      "tests": {
+        "unit": [
+          "validateDataset returns typed dataset on valid input",
+          "validateDataset returns structured error list on invalid input"
+        ],
+        "e2e": [
+          "Load fixture dataset and confirm root node visible",
+          "Load invalid dataset and confirm error panel displays"
+        ]
+      }
+    },
+    {
+      "id": "F2",
+      "name": "Tree render (pan/zoom + selection)",
+      "mustHave": true,
+      "description": "Interactive tree canvas with smooth pan/zoom, node selection, and highlights for relatives.",
+      "acceptanceCriteria": [
+        "User can pan by drag and zoom by wheel/pinch",
+        "Clicking a person selects them, centers view (optional), and highlights ancestors/descendants/partners",
+        "Minimap updates with viewport"
+      ],
+      "tests": {
+        "unit": [
+          "Viewport transforms are invertible (world<->screen)",
+          "Hit-test returns correct node under cursor",
+          "Highlight selector returns correct sets (ancestors, descendants, partners)"
+        ],
+        "e2e": [
+          "Pan/zoom changes transform state",
+          "Click node opens details panel",
+          "Highlight class applied to expected relatives"
+        ],
+        "visual": [
+          "Golden screenshot of initial tree layout",
+          "Golden screenshot of selected node highlight state"
+        ]
+      }
+    },
+    {
+      "id": "F3",
+      "name": "Royal Details Panel",
+      "mustHave": true,
+      "description": "A scroll-like side panel showing portrait, title, facts, media, and relationship quick actions.",
+      "acceptanceCriteria": [
+        "Selecting node opens panel with correct data",
+        "Privacy flags hide dates/location when enabled",
+        "Panel includes quick jump to parents/children/partners"
+      ],
+      "tests": {
+        "react": [
+          "Panel renders portrait fallback if missing",
+          "Privacy mode hides born/died fields",
+          "Clicking related person link selects them"
+        ]
+      }
+    },
+    {
+      "id": "F4",
+      "name": "Search + filters",
+      "mustHave": true,
+      "description": "Typeahead search by name; filters by tags, branch, living/deceased.",
+      "acceptanceCriteria": [
+        "Search results show portrait + title",
+        "Selecting result centers/zooms to person",
+        "Filters dim non-matching nodes"
+      ],
+      "tests": {
+        "unit": [
+          "Search index returns relevant matches (case-insensitive)",
+          "Filter predicate correct for tags/living"
+        ],
+        "e2e": [
+          "Search for known person selects and centers them",
+          "Filter by tag dims others"
+        ]
+      }
+    },
+    {
+      "id": "F5",
+      "name": "Editor (add/edit person + link relationships)",
+      "mustHave": true,
+      "description": "Royal-styled editor to add/edit people and relationships. Must maintain data integrity and pass validation.",
+      "acceptanceCriteria": [
+        "Add person creates valid ID and updates dataset",
+        "Link parent-child updates relationships and redraws layout",
+        "Prevent creating parent cycles; show helpful error",
+        "Undo/redo works for edits"
+      ],
+      "tests": {
+        "unit": [
+          "addPerson creates person with defaults",
+          "linkParentChild rejects cycles",
+          "undoRedo returns to prior state exactly"
+        ],
+        "e2e": [
+          "Create new person via UI and see node appear",
+          "Create parent link and see edge + layout update",
+          "Attempt cycle shows error modal"
+        ]
+      }
+    },
+    {
+      "id": "F6",
+      "name": "Timeline view",
+      "mustHave": false,
+      "description": "Dynasty timeline showing events (birth, marriage, moves, achievements).",
+      "acceptanceCriteria": [
+        "Events render chronologically",
+        "Filter by person or branch",
+        "Click event focuses person in tree"
+      ],
+      "tests": {
+        "unit": ["Events sorted by date stable", "Event filter by personIds"],
+        "e2e": ["Click event focuses corresponding person"]
+      }
+    },
+    {
+      "id": "F7",
+      "name": "Relationship path (How are they related?)",
+      "mustHave": true,
+      "description": "Select two people and show their relationship path in graph with highlighted nodes and explanation.",
+      "acceptanceCriteria": [
+        "Path finder returns shortest path within parent/partner edges",
+        "UI highlights path and renders textual explanation",
+        "If no path, show 'No known connection' parchment message"
+      ],
+      "tests": {
+        "unit": [
+          "shortestPath returns expected path for fixture graphs",
+          "noPath returns null",
+          "explanation generator produces correct labels (e.g., 'grandparent') for simple cases"
+        ],
+        "e2e": [
+          "Choose two known related people and path highlights",
+          "Choose unrelated people shows message"
+        ]
+      }
+    },
+    {
+      "id": "F8",
+      "name": "Export (SVG/PNG/PDF)",
+      "mustHave": false,
+      "description": "Export tree poster in royal style; optional 'House Book' PDF with portraits + bios.",
+      "acceptanceCriteria": [
+        "Export respects privacy mode (redactions)",
+        "Export includes watermark and house name",
+        "Output matches visual snapshot tests within tolerance"
+      ],
+      "tests": {
+        "unit": [
+          "exportRenderer outputs deterministic SVG",
+          "privacy mode removes restricted fields in export"
+        ],
+        "e2e": ["Export action produces downloadable file"],
+        "visual": ["Golden export snapshot comparison"]
+      }
+    }
+  ],
+  "tddPlan": {
+    "methodology": "Red-Green-Refactor with strict gating in CI: tests must be written before implementation for each module and feature.",
+    "definitionOfDone": [
+      "Unit tests added for domain + layout + graph operations",
+      "React component tests for critical UI components",
+      "E2E tests for primary flows (load, navigate, select, edit, search)",
+      "Visual regression tests for key scenes",
+      "Performance budget checks for large dataset fixture (e.g., 1000 nodes) - optional v2"
+    ],
+    "testLayers": {
+      "unit": {
+        "scope": [
+          "Zod validation",
+          "Graph selectors",
+          "Layout algorithm",
+          "Viewport transforms",
+          "Path finding",
+          "Undo/redo"
+        ],
+        "fixtures": [
+          "smallFamilyFixture (10-20 people)",
+          "royalStyleFixture (with titles/badges/media)",
+          "largeFamilyFixture (500-1000 people synthetic)"
+        ]
+      },
+      "component": {
+        "scope": [
+          "RoyalNodeCard states",
+          "Details panel rendering + privacy mode",
+          "Search results + selection",
+          "Editor forms validation"
+        ]
+      },
+      "e2e": {
+        "scope": [
+          "Load dataset",
+          "Navigate pan/zoom",
+          "Select person -> details panel",
+          "Search -> focus",
+          "Edit -> add person, link relationship, undo"
+        ]
+      },
+      "visualRegression": {
+        "scope": [
+          "Initial tree scene",
+          "Selected node highlight scene",
+          "Details panel open scene",
+          "Export poster scene (optional)"
+        ],
+        "approach": "Playwright screenshot comparisons with stable deterministic layout seeds"
+      }
+    },
+    "ciGates": {
+      "requiredChecks": [
+        "pnpm test:unit",
+        "pnpm test:component",
+        "pnpm test:e2e (headless)",
+        "pnpm lint",
+        "pnpm typecheck"
+      ],
+      "branchPolicy": "No merge if any test fails; coverage threshold enforced"
+    }
+  },
+  "algorithmsAndSelectors": {
+    "coreFunctions": [
+      {
+        "name": "validateDataset",
+        "input": "unknown",
+        "output": "FamilyDataset | ValidationError[]",
+        "tests": [
+          "returns errors for missing meta.people.relationships.ui",
+          "rejects relationship references to missing person IDs"
+        ]
+      },
+      {
+        "name": "buildAdjacency",
+        "input": "FamilyDataset",
+        "output": "AdjacencyGraph",
+        "tests": [
+          "parent edges directional; partner edges undirected",
+          "graph contains all people nodes"
+        ]
+      },
+      {
+        "name": "computeAncestors",
+        "input": "personId, graph",
+        "output": "Set<PersonId>",
+        "tests": [
+          "returns all ancestors up to root",
+          "handles multiple parents"
+        ]
+      },
+      {
+        "name": "computeDescendants",
+        "input": "personId, graph",
+        "output": "Set<PersonId>",
+        "tests": ["returns all descendants breadth-first", "no duplicates"]
+      },
+      {
+        "name": "shortestRelationshipPath",
+        "input": "a, b, graph, allowedEdgeTypes",
+        "output": "PersonId[] | null",
+        "tests": ["returns shortest path when exists", "returns null if none"]
+      },
+      {
+        "name": "layoutTree",
+        "input": "rootPersonId, dataset, options",
+        "output": "LayoutResult { nodes: {id,x,y}[], edges: {from,to,type}[] }",
+        "tests": [
+          "deterministic output with seed",
+          "partners align horizontally",
+          "children positioned below parents in descendant mode"
+        ]
+      },
+      {
+        "name": "hitTestNode",
+        "input": "screenX, screenY, layout, viewport",
+        "output": "PersonId | null",
+        "tests": ["returns correct node at point", "returns null when empty"]
+      },
+      {
+        "name": "applyPrivacy",
+        "input": "dataset, viewerRole, privacyMode",
+        "output": "datasetRedacted",
+        "tests": [
+          "living private people hidden",
+          "dates hidden when hideDates=true"
+        ]
+      }
+    ]
+  },
+  "uiFlows": {
+    "Flow_LoadAndRender": {
+      "steps": [
+        "Load dataset JSON from /data/family.json (or upload)",
+        "Run validateDataset",
+        "If errors => show RoyalErrorPanel",
+        "Else => compute layout and render",
+        "Select default root from ui.defaultRootPersonId"
+      ],
+      "e2eTest": "loads fixture and shows root card"
+    },
+    "Flow_SelectPerson": {
+      "steps": [
+        "User clicks node",
+        "Set selectedPersonId",
+        "Compute highlight sets (ancestors/descendants/partners)",
+        "Open ScrollPanel with Royal details",
+        "Optional: animate camera to node"
+      ],
+      "e2eTest": "click node opens details panel with correct name"
+    },
+    "Flow_SearchAndFocus": {
+      "steps": [
+        "User types query",
+        "Show results list",
+        "User picks result",
+        "Select person + center viewport",
+        "Open details panel"
+      ],
+      "e2eTest": "search selects and focuses person"
+    },
+    "Flow_EditAddPerson": {
+      "steps": [
+        "Open editor from toolbar",
+        "Fill form (name, title, born optional)",
+        "Submit => create person",
+        "Update dataset state",
+        "Recompute layout",
+        "New node visible + selected"
+      ],
+      "e2eTest": "add person appears in tree"
+    },
+    "Flow_LinkRelationship": {
+      "steps": [
+        "From person details, choose 'Add child' or 'Add partner'",
+        "Pick existing person or create new",
+        "Validate no cycles",
+        "Create relationship",
+        "Recompute layout, edges render"
+      ],
+      "e2eTest": "link parent-child draws edge"
+    },
+    "Flow_RelationshipPath": {
+      "steps": [
+        "Open 'How are they related?' tool",
+        "Pick Person A and Person B",
+        "Compute shortestRelationshipPath",
+        "If found => highlight path + textual explanation",
+        "If none => show message"
+      ],
+      "e2eTest": "path highlights for related people"
+    }
+  },
+  "performance": {
+    "targets": {
+      "initialRender": "Under 2s for 300 nodes on a mid laptop",
+      "interaction": "Pan/zoom at 60fps for 300 nodes; degrade gracefully beyond with culling",
+      "memory": "No leaks; teardown releases event handlers and large arrays"
+    },
+    "strategies": [
+      "Node culling (only render nodes within viewport bounds)",
+      "Memoized selectors",
+      "Deterministic layout caching",
+      "Debounced expensive recalcs on continuous zoom"
+    ],
+    "tests": {
+      "unit": [
+        "layoutTree cached results for same root/options",
+        "culling returns subset within viewport"
+      ]
+    }
+  },
+  "securityAndPrivacy": {
+    "privacyFirst": true,
+    "modes": [
+      {
+        "name": "Family Mode",
+        "description": "Default; show most details."
+      },
+      {
+        "name": "Public Poster Mode",
+        "description": "Redact sensitive info like birth dates, locations, living private members."
+      }
+    ],
+    "requirements": [
+      "All exports must respect privacy mode",
+      "If auth added later, enforce server-side redaction too",
+      "No third-party analytics by default (optional toggles)"
+    ],
+    "tests": {
+      "unit": ["applyPrivacy removes restricted fields"],
+      "e2e": ["export in public mode hides dates"]
+    }
+  },
+  "fileAndFolderPlan": {
+    "apps/web": [
+      "src/app/(routes)/tree/page.tsx",
+      "src/components/RoyalToolbar.tsx",
+      "src/components/RoyalTreeCanvas.tsx",
+      "src/components/RoyalNodeCard.tsx",
+      "src/components/ScrollPanel.tsx",
+      "src/components/WaxSealModal.tsx",
+      "src/components/Minimap.tsx",
+      "src/components/RelationshipPathTool.tsx",
+      "src/lib/datasetLoader.ts",
+      "src/lib/viewStore.ts"
+    ],
+    "packages/core": [
+      "src/schema/dataset.zod.ts",
+      "src/schema/jsonSchema.gen.ts (optional)",
+      "src/graph/buildAdjacency.ts",
+      "src/graph/selectors.ts",
+      "src/graph/path.ts",
+      "src/privacy/applyPrivacy.ts",
+      "src/history/undoRedo.ts"
+    ],
+    "packages/renderer": [
+      "src/layout/layoutTree.ts",
+      "src/layout/layoutPartners.ts",
+      "src/viewport/transform.ts",
+      "src/viewport/hitTest.ts",
+      "src/render/cull.ts"
+    ],
+    "packages/ui": [
+      "src/theme/royalTheme.ts",
+      "src/tokens/tokens.ts",
+      "src/assets/crests/*"
+    ],
+    "packages/testkit": [
+      "src/fixtures/smallFamily.json",
+      "src/fixtures/largeFamily.synthetic.ts",
+      "src/factories/personFactory.ts",
+      "src/factories/relationshipFactory.ts"
+    ],
+    "tests": [
+      "apps/web/e2e/*.spec.ts",
+      "packages/core/src/**/*.test.ts",
+      "packages/renderer/src/**/*.test.ts"
+    ]
+  },
+  "deliveryMilestones": [
+    {
+      "milestone": "M1 - Read-only royal tree",
+      "includes": ["F1", "F2", "F3", "F4"],
+      "definition": "Load JSON, render tree, select + details, search/filters, visual snapshots"
+    },
+    {
+      "milestone": "M2 - Editor + relationship path",
+      "includes": ["F5", "F7"],
+      "definition": "Add/edit/link, undo/redo, path finder"
+    },
+    {
+      "milestone": "M3 - Timeline + exports (optional)",
+      "includes": ["F6", "F8"],
+      "definition": "Timeline, SVG/PNG export, privacy poster mode"
+    }
+  ],
+  "instructionsToAIImplementer": {
+    "hardRules": [
+      "Write tests first for every function in packages/core and packages/renderer",
+      "Renderer outputs must be deterministic for snapshots",
+      "Do not skip validation rules; surface helpful errors",
+      "No direct mutation of dataset state; use immutable updates",
+      "All UI components must have accessible labels and keyboard support where applicable"
+    ],
+    "workflow": [
+      "1) Implement dataset.zod schema + validateDataset + unit tests",
+      "2) Implement graph adjacency + selectors + tests",
+      "3) Implement deterministic layoutTree + tests",
+      "4) Implement viewport transforms + hit-test + tests",
+      "5) Build RoyalTreeCanvas using renderer outputs; add visual snapshots",
+      "6) Build Details panel + NodeCard; add component tests",
+      "7) Add search/filter; add tests",
+      "8) Add editor + undo/redo; add tests",
+      "9) Add path finder; add tests",
+      "10) Add timeline/export optional"
+    ]
+  }
+}

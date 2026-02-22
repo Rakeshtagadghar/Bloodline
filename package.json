@@ -1,0 +1,36 @@
+{
+  "name": "bloodline",
+  "private": true,
+  "version": "0.1.0",
+  "packageManager": "pnpm@10.0.0",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "test:unit": "vitest run packages/core/src packages/renderer/src",
+    "test:component": "vitest run apps/web/src",
+    "test:e2e": "playwright test",
+    "test:e2e:update": "playwright test --update-snapshots",
+    "e2e:install": "playwright install chromium",
+    "lint:types": "eslint . --max-warnings=0",
+    "commitlint": "commitlint --last",
+    "commitlint:range": "commitlint --from HEAD~10 --to HEAD",
+    "typecheck": "turbo run typecheck",
+    "lint": "eslint . --max-warnings=0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "^20.1.0",
+    "@commitlint/config-conventional": "^20.0.0",
+    "@playwright/test": "^1.51.1",
+    "@testing-library/jest-dom": "^6.7.0",
+    "@testing-library/react": "^16.3.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/node": "^22.13.10",
+    "eslint": "^9.39.1",
+    "jsdom": "^26.1.0",
+    "turbo": "^2.4.2",
+    "typescript-eslint": "^8.46.3",
+    "typescript": "^5.7.3",
+    "vitest": "^3.0.8",
+    "zod": "^3.24.2"
+  }
+}

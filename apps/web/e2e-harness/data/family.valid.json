@@ -1,0 +1,26 @@
+{
+  "meta": {
+    "dataset": "fixture_family",
+    "version": "1.0.0",
+    "displayName": "House Atlas"
+  },
+  "people": [
+    { "id": "p_root", "name": "Rakesh I", "display": { "styleTitle": "Patriarch" } },
+    { "id": "p_partner", "name": "Mira", "display": { "styleTitle": "Matriarch" } },
+    { "id": "p_child1", "name": "Aarav", "display": { "styleTitle": "Heir" } },
+    { "id": "p_child2", "name": "Kavya" },
+    { "id": "p_grand", "name": "Nila", "display": { "styleTitle": "Grandchild" } }
+  ],
+  "relationships": [
+    { "id": "rel_partner_1", "type": "partner", "from": "p_root", "to": "p_partner" },
+    { "id": "rel_parent_1", "type": "parent", "parentId": "p_root", "childId": "p_child1" },
+    { "id": "rel_parent_2", "type": "parent", "parentId": "p_partner", "childId": "p_child1" },
+    { "id": "rel_parent_3", "type": "parent", "parentId": "p_root", "childId": "p_child2" },
+    { "id": "rel_parent_4", "type": "parent", "parentId": "p_child1", "childId": "p_grand" }
+  ],
+  "ui": {
+    "theme": "royal-archive",
+    "defaultRootPersonId": "p_root",
+    "layout": "descendant"
+  }
+}

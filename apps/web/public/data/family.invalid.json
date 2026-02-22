@@ -1,0 +1,16 @@
+{
+  "meta": {
+    "dataset": "broken_house",
+    "version": "1.0.0",
+    "displayName": "Broken House"
+  },
+  "people": [{ "id": "p_root", "name": "Rakesh I" }],
+  "relationships": [
+    { "id": "rel_parent_bad", "type": "parent", "parentId": "p_root", "childId": "p_missing" }
+  ],
+  "ui": {
+    "theme": "royal-archive",
+    "defaultRootPersonId": "p_root",
+    "layout": "descendant"
+  }
+}

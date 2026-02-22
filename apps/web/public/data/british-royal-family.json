@@ -1,0 +1,376 @@
+{
+  "meta": {
+    "dataset": "british_royal_family_example",
+    "version": "1.0.0",
+    "displayName": "British Royal Family (Example)",
+    "motto": "An example family tree dataset inspired by the royal poster style"
+  },
+  "people": [
+    {
+      "id": "p_queen_elizabeth_ii",
+      "name": "Queen Elizabeth II",
+      "display": { "styleTitle": "Queen" },
+      "born": "1926-04-21",
+      "died": "2022-09-08",
+      "house": "Windsor",
+      "tags": ["monarch", "founder-line"],
+      "privacy": { "living": false }
+    },
+    {
+      "id": "p_prince_philip",
+      "name": "Prince Philip",
+      "display": { "styleTitle": "Duke of Edinburgh" },
+      "born": "1921-06-10",
+      "died": "2021-04-09",
+      "house": "Windsor",
+      "tags": ["consort"],
+      "privacy": { "living": false }
+    },
+    {
+      "id": "p_charles",
+      "name": "Prince Charles",
+      "display": { "styleTitle": "Prince of Wales (then)" },
+      "born": "1948-11-14",
+      "house": "Windsor",
+      "tags": ["heir-line"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_diana",
+      "name": "Princess Diana",
+      "display": { "styleTitle": "Princess of Wales" },
+      "born": "1961-07-01",
+      "died": "1997-08-31",
+      "house": "Spencer",
+      "tags": ["wales-branch"],
+      "privacy": { "living": false }
+    },
+    {
+      "id": "p_camilla",
+      "name": "Camilla Parker Bowles",
+      "display": { "styleTitle": "Queen Consort" },
+      "born": "1947-07-17",
+      "house": "Windsor",
+      "tags": ["wales-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_anne",
+      "name": "Princess Anne",
+      "display": { "styleTitle": "Princess Royal" },
+      "born": "1950-08-15",
+      "house": "Windsor",
+      "tags": ["anne-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_mark_phillips",
+      "name": "Mark Phillips",
+      "display": { "styleTitle": "Former Spouse" },
+      "born": "1948-09-22",
+      "house": "Phillips",
+      "tags": ["anne-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_timothy_laurence",
+      "name": "Timothy Laurence",
+      "display": { "styleTitle": "Vice Admiral" },
+      "born": "1955-03-01",
+      "house": "Laurence",
+      "tags": ["anne-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_andrew",
+      "name": "Prince Andrew",
+      "display": { "styleTitle": "Duke of York" },
+      "born": "1960-02-19",
+      "house": "Windsor",
+      "tags": ["york-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_sarah_ferguson",
+      "name": "Sarah Ferguson",
+      "display": { "styleTitle": "Duchess of York" },
+      "born": "1959-10-15",
+      "house": "York Branch",
+      "tags": ["york-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_edward",
+      "name": "Prince Edward",
+      "display": { "styleTitle": "Duke of Edinburgh" },
+      "born": "1964-03-10",
+      "house": "Windsor",
+      "tags": ["edinburgh-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_sophie",
+      "name": "Sophie Rhys-Jones",
+      "display": { "styleTitle": "Duchess of Edinburgh" },
+      "born": "1965-01-20",
+      "house": "Edinburgh Branch",
+      "tags": ["edinburgh-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_prince_william",
+      "name": "Prince William",
+      "display": { "styleTitle": "Prince of Wales" },
+      "born": "1982-06-21",
+      "house": "Wales Branch",
+      "tags": ["wales-branch", "heir-line"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_kate_middleton",
+      "name": "Kate Middleton",
+      "display": { "styleTitle": "Princess of Wales" },
+      "born": "1982-01-09",
+      "house": "Wales Branch",
+      "tags": ["wales-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_prince_harry",
+      "name": "Prince Harry",
+      "display": { "styleTitle": "Duke of Sussex" },
+      "born": "1984-09-15",
+      "house": "Sussex Branch",
+      "tags": ["wales-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_meghan_markle",
+      "name": "Meghan Markle",
+      "display": { "styleTitle": "Duchess of Sussex" },
+      "born": "1981-08-04",
+      "house": "Sussex Branch",
+      "tags": ["sussex-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_prince_george",
+      "name": "Prince George",
+      "display": { "styleTitle": "Prince" },
+      "born": "2013-07-22",
+      "house": "Wales Branch",
+      "tags": ["child-generation", "heir-line"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_princess_charlotte",
+      "name": "Princess Charlotte",
+      "display": { "styleTitle": "Princess" },
+      "born": "2015-05-02",
+      "house": "Wales Branch",
+      "tags": ["child-generation"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_baby_wales",
+      "name": "Baby",
+      "display": { "styleTitle": "Prince Louis (example poster slot)" },
+      "born": "2018-04-23",
+      "house": "Wales Branch",
+      "tags": ["child-generation"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_peter_phillips",
+      "name": "Peter Phillips",
+      "display": { "styleTitle": "Anne Branch" },
+      "born": "1977-11-15",
+      "house": "Anne Branch",
+      "tags": ["anne-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_autumn_kelly",
+      "name": "Autumn Kelly",
+      "display": { "styleTitle": "Former Spouse" },
+      "born": "1978-05-03",
+      "house": "Phillips Branch",
+      "tags": ["anne-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_savannah_phillips",
+      "name": "Savannah Phillips",
+      "display": { "styleTitle": "Child" },
+      "born": "2010-12-29",
+      "house": "Phillips Branch",
+      "tags": ["child-generation"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_isla_phillips",
+      "name": "Isla Phillips",
+      "display": { "styleTitle": "Child" },
+      "born": "2012-03-29",
+      "house": "Phillips Branch",
+      "tags": ["child-generation"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_zara_phillips",
+      "name": "Zara Phillips",
+      "display": { "styleTitle": "Zara Tindall" },
+      "born": "1981-05-15",
+      "house": "Anne Branch",
+      "tags": ["anne-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_mike_tindall",
+      "name": "Mike Tindall",
+      "display": { "styleTitle": "Spouse" },
+      "born": "1978-10-18",
+      "house": "Tindall Branch",
+      "tags": ["anne-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_mia_tindall",
+      "name": "Mia Tindall",
+      "display": { "styleTitle": "Child" },
+      "born": "2014-01-17",
+      "house": "Tindall Branch",
+      "tags": ["child-generation"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_baby_tindall",
+      "name": "Baby",
+      "display": { "styleTitle": "Tindall Child (example poster slot)" },
+      "house": "Tindall Branch",
+      "tags": ["child-generation"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_princess_eugenie",
+      "name": "Princess Eugenie",
+      "display": { "styleTitle": "Princess of York" },
+      "born": "1990-03-23",
+      "house": "York Branch",
+      "tags": ["york-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_jack_brooksbank",
+      "name": "Jack Brooksbank",
+      "display": { "styleTitle": "Spouse" },
+      "born": "1986-05-03",
+      "house": "York Branch",
+      "tags": ["york-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_princess_beatrice",
+      "name": "Princess Beatrice",
+      "display": { "styleTitle": "Princess of York" },
+      "born": "1988-08-08",
+      "house": "York Branch",
+      "tags": ["york-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_lady_louise",
+      "name": "Lady Louise",
+      "display": { "styleTitle": "Lady Louise Windsor" },
+      "born": "2003-11-08",
+      "house": "Edinburgh Branch",
+      "tags": ["edinburgh-branch"],
+      "privacy": { "living": true }
+    },
+    {
+      "id": "p_james",
+      "name": "James",
+      "display": { "styleTitle": "Earl of Wessex (then)" },
+      "born": "2007-12-17",
+      "house": "Edinburgh Branch",
+      "tags": ["edinburgh-branch"],
+      "privacy": { "living": true }
+    }
+  ],
+  "relationships": [
+    { "id": "rel_partner_elizabeth_philip", "type": "partner", "from": "p_queen_elizabeth_ii", "to": "p_prince_philip", "status": "married" },
+
+    { "id": "rel_parent_elizabeth_charles", "type": "parent", "parentId": "p_queen_elizabeth_ii", "childId": "p_charles" },
+    { "id": "rel_parent_philip_charles", "type": "parent", "parentId": "p_prince_philip", "childId": "p_charles" },
+    { "id": "rel_parent_elizabeth_anne", "type": "parent", "parentId": "p_queen_elizabeth_ii", "childId": "p_anne" },
+    { "id": "rel_parent_philip_anne", "type": "parent", "parentId": "p_prince_philip", "childId": "p_anne" },
+    { "id": "rel_parent_elizabeth_andrew", "type": "parent", "parentId": "p_queen_elizabeth_ii", "childId": "p_andrew" },
+    { "id": "rel_parent_philip_andrew", "type": "parent", "parentId": "p_prince_philip", "childId": "p_andrew" },
+    { "id": "rel_parent_elizabeth_edward", "type": "parent", "parentId": "p_queen_elizabeth_ii", "childId": "p_edward" },
+    { "id": "rel_parent_philip_edward", "type": "parent", "parentId": "p_prince_philip", "childId": "p_edward" },
+
+    { "id": "rel_partner_charles_diana", "type": "partner", "from": "p_charles", "to": "p_diana", "status": "divorced" },
+    { "id": "rel_partner_charles_camilla", "type": "partner", "from": "p_charles", "to": "p_camilla", "status": "married" },
+    { "id": "rel_parent_charles_william", "type": "parent", "parentId": "p_charles", "childId": "p_prince_william" },
+    { "id": "rel_parent_diana_william", "type": "parent", "parentId": "p_diana", "childId": "p_prince_william" },
+    { "id": "rel_parent_charles_harry", "type": "parent", "parentId": "p_charles", "childId": "p_prince_harry" },
+    { "id": "rel_parent_diana_harry", "type": "parent", "parentId": "p_diana", "childId": "p_prince_harry" },
+
+    { "id": "rel_partner_william_kate", "type": "partner", "from": "p_prince_william", "to": "p_kate_middleton", "status": "married" },
+    { "id": "rel_partner_harry_meghan", "type": "partner", "from": "p_prince_harry", "to": "p_meghan_markle", "status": "married" },
+    { "id": "rel_parent_william_george", "type": "parent", "parentId": "p_prince_william", "childId": "p_prince_george" },
+    { "id": "rel_parent_kate_george", "type": "parent", "parentId": "p_kate_middleton", "childId": "p_prince_george" },
+    { "id": "rel_parent_william_charlotte", "type": "parent", "parentId": "p_prince_william", "childId": "p_princess_charlotte" },
+    { "id": "rel_parent_kate_charlotte", "type": "parent", "parentId": "p_kate_middleton", "childId": "p_princess_charlotte" },
+    { "id": "rel_parent_william_babywales", "type": "parent", "parentId": "p_prince_william", "childId": "p_baby_wales" },
+    { "id": "rel_parent_kate_babywales", "type": "parent", "parentId": "p_kate_middleton", "childId": "p_baby_wales" },
+
+    { "id": "rel_partner_anne_mark", "type": "partner", "from": "p_anne", "to": "p_mark_phillips", "status": "divorced" },
+    { "id": "rel_partner_anne_timothy", "type": "partner", "from": "p_anne", "to": "p_timothy_laurence", "status": "married" },
+    { "id": "rel_parent_anne_peter", "type": "parent", "parentId": "p_anne", "childId": "p_peter_phillips" },
+    { "id": "rel_parent_mark_peter", "type": "parent", "parentId": "p_mark_phillips", "childId": "p_peter_phillips" },
+    { "id": "rel_parent_anne_zara", "type": "parent", "parentId": "p_anne", "childId": "p_zara_phillips" },
+    { "id": "rel_parent_mark_zara", "type": "parent", "parentId": "p_mark_phillips", "childId": "p_zara_phillips" },
+    { "id": "rel_partner_peter_autumn", "type": "partner", "from": "p_peter_phillips", "to": "p_autumn_kelly", "status": "divorced" },
+    { "id": "rel_parent_peter_savannah", "type": "parent", "parentId": "p_peter_phillips", "childId": "p_savannah_phillips" },
+    { "id": "rel_parent_autumn_savannah", "type": "parent", "parentId": "p_autumn_kelly", "childId": "p_savannah_phillips" },
+    { "id": "rel_parent_peter_isla", "type": "parent", "parentId": "p_peter_phillips", "childId": "p_isla_phillips" },
+    { "id": "rel_parent_autumn_isla", "type": "parent", "parentId": "p_autumn_kelly", "childId": "p_isla_phillips" },
+    { "id": "rel_partner_zara_mike", "type": "partner", "from": "p_zara_phillips", "to": "p_mike_tindall", "status": "married" },
+    { "id": "rel_parent_zara_mia", "type": "parent", "parentId": "p_zara_phillips", "childId": "p_mia_tindall" },
+    { "id": "rel_parent_mike_mia", "type": "parent", "parentId": "p_mike_tindall", "childId": "p_mia_tindall" },
+    { "id": "rel_parent_zara_baby", "type": "parent", "parentId": "p_zara_phillips", "childId": "p_baby_tindall" },
+    { "id": "rel_parent_mike_baby", "type": "parent", "parentId": "p_mike_tindall", "childId": "p_baby_tindall" },
+
+    { "id": "rel_partner_andrew_sarah", "type": "partner", "from": "p_andrew", "to": "p_sarah_ferguson", "status": "divorced" },
+    { "id": "rel_parent_andrew_eugenie", "type": "parent", "parentId": "p_andrew", "childId": "p_princess_eugenie" },
+    { "id": "rel_parent_sarah_eugenie", "type": "parent", "parentId": "p_sarah_ferguson", "childId": "p_princess_eugenie" },
+    { "id": "rel_parent_andrew_beatrice", "type": "parent", "parentId": "p_andrew", "childId": "p_princess_beatrice" },
+    { "id": "rel_parent_sarah_beatrice", "type": "parent", "parentId": "p_sarah_ferguson", "childId": "p_princess_beatrice" },
+    { "id": "rel_partner_eugenie_jack", "type": "partner", "from": "p_princess_eugenie", "to": "p_jack_brooksbank", "status": "married" },
+
+    { "id": "rel_partner_edward_sophie", "type": "partner", "from": "p_edward", "to": "p_sophie", "status": "married" },
+    { "id": "rel_parent_edward_louise", "type": "parent", "parentId": "p_edward", "childId": "p_lady_louise" },
+    { "id": "rel_parent_sophie_louise", "type": "parent", "parentId": "p_sophie", "childId": "p_lady_louise" },
+    { "id": "rel_parent_edward_james", "type": "parent", "parentId": "p_edward", "childId": "p_james" },
+    { "id": "rel_parent_sophie_james", "type": "parent", "parentId": "p_sophie", "childId": "p_james" }
+  ],
+  "ui": {
+    "theme": "royal-archive",
+    "defaultRootPersonId": "p_queen_elizabeth_ii",
+    "layout": "descendant",
+    "featureFlags": {
+      "editor": false,
+      "timeline": false,
+      "succession": false,
+      "export": true,
+      "privacyMode": true
+    },
+    "labels": {
+      "familyName": "British Royal Family"
+    },
+    "branding": {
+      "watermarkText": "Royal Family Example Tree"
+    }
+  }
+}

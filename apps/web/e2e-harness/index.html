@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Bloodline E2E Harness</title>
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <div class="shell">
+      <header class="toolbar" aria-label="Royal Toolbar">
+        <div class="brand">
+          <span class="crest" aria-hidden="true">♛</span>
+          <div>
+            <p class="eyebrow">Royal Archive</p>
+            <h1>Bloodline Harness</h1>
+          </div>
+        </div>
+        <div class="toolbar-actions">
+          <button id="load-valid" type="button">Load Fixture</button>
+          <button id="load-invalid" type="button">Load Invalid</button>
+          <label class="search-wrap">
+            <span class="sr-only">Search people</span>
+            <input id="search" type="search" placeholder="Search by name..." />
+          </label>
+        </div>
+      </header>
+
+      <main class="layout">
+        <section class="stage-card" aria-label="Tree View">
+          <div class="stage-meta">
+            <span id="dataset-status" data-testid="dataset-status">No dataset loaded</span>
+            <span id="viewport-readout" data-testid="viewport-readout">x:0 y:0 z:1.00</span>
+          </div>
+
+          <div id="error-panel" class="error-panel" hidden>
+            <h2>Dataset Validation Failed</h2>
+            <ul id="error-list"></ul>
+          </div>
+
+          <div id="tree-stage" class="tree-stage" aria-label="Interactive family tree">
+            <div id="world" class="world"></div>
+          </div>
+
+          <div class="search-results" id="search-results" aria-live="polite"></div>
+        </section>
+
+        <aside class="details-card" aria-label="Royal Details Panel">
+          <h2>Selected Person</h2>
+          <div id="details-empty">Select a person node to inspect details.</div>
+          <div id="details-content" hidden>
+            <p class="detail-title" id="detail-name"></p>
+            <p class="detail-subtitle" id="detail-meta"></p>
+            <div class="detail-grid">
+              <div>
+                <h3>Parents</h3>
+                <ul id="detail-parents"></ul>
+              </div>
+              <div>
+                <h3>Children</h3>
+                <ul id="detail-children"></ul>
+              </div>
+              <div>
+                <h3>Partners</h3>
+                <ul id="detail-partners"></ul>
+              </div>
+            </div>
+          </div>
+        </aside>
+      </main>
+    </div>
+
+    <script src="/app.js" type="module"></script>
+  </body>
+  </html>
